@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#EADCF0">
+<meta name="description" content="Bánh chúi Tarot – xem tarot miễn phí, tự tay chọn lá, giải bài dễ thương mỗi ngày 🍌">
+<style>body{margin:0;-webkit-text-size-adjust:100%}[hidden]{display:none!important}</style>
+<title>Bánh chúi Tarot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: khung điện thoại ≤480px, nền lilac, nội dung trên card trắng bo lớn, nav dưới cố định. Một theme sáng (chủ ý). */
+:root{
+  --bg:#EADCF0; --bg-out:#D9C6E4; --card:#FFFFFF; --soft:#F6F0FA;
+  --ink:#2B2340; --muted:#8B8299; --line:#E9DFF0;
+  --pink:#F6C6E6; --lilac:#E3D3FF; --sky:#BFE6FA; --lime:#E6F78A; --banana:#FFD95A;
+  --grad:linear-gradient(120deg,#E6F78A 0%,#F8C8DE 100%);
+  --r-xl:32px; --r-lg:26px; --r-md:18px;
+  --shadow:0 8px 28px rgba(96,62,128,.08);
+  --font:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg-out);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.55;overflow-x:hidden}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid #9A7BE0;outline-offset:2px;border-radius:12px}
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+
+.app{max-width:480px;margin:0 auto;min-height:100%;background:var(--bg);position:relative;
+  background-image:radial-gradient(circle at 12% 6%,rgba(255,255,255,.7) 0 2px,transparent 3px),
+  radial-gradient(circle at 88% 14%,rgba(255,255,255,.8) 0 1.5px,transparent 2.5px),
+  radial-gradient(circle at 70% 42%,rgba(255,255,255,.6) 0 1.5px,transparent 2.5px);}
+@media (min-width:520px){.app{box-shadow:0 0 0 1px rgba(96,62,128,.06),0 30px 80px rgba(96,62,128,.18)}}
+.page{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 130px;display:flex;flex-direction:column;gap:18px}
+.page[hidden]{display:none!important}
+
+/* ---------- common ---------- */
+.card{background:var(--card);border-radius:var(--r-xl);box-shadow:var(--shadow);padding:20px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.h-big{font-size:28px;font-weight:800;line-height:1.2}
+.h-sec{font-size:19px;font-weight:800}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding-inline:4px}
+.btn-main{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 26px;border-radius:999px;background:var(--grad);font-weight:700;font-size:16px;box-shadow:0 8px 20px rgba(230,170,200,.45);transition:transform .15s}
+.btn-main:active{transform:scale(.97)}
+.btn-main[disabled]{opacity:.55;box-shadow:none}
+.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;background:var(--card);border:1.5px solid var(--line);font-weight:600}
+.btn-ghost[disabled]{opacity:.6}
+.btn-block{width:100%}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px;margin:-2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;min-height:44px;padding:0 16px;border-radius:999px;background:var(--soft);border:1.5px solid transparent;font-weight:600;font-size:14px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:background .2s,border-color .2s}
+.chip[aria-pressed="true"]{background:var(--lilac);border-color:var(--ink)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:#9DC23A}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--soft)}
+.pill.rev{background:#FFE1EC;color:#B03A6E}
+.pill.soon{background:var(--sky);color:#235A78}
+.kws{display:flex;flex-wrap:wrap;gap:6px}
+.kw{font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--soft)}
+.foot{text-align:center;font-size:12px;color:var(--muted);padding-top:6px}
+.disclaimer{font-size:12.5px;color:var(--muted);text-align:center}
+.sparkle{position:absolute;pointer-events:none;color:#fff}
+.sparkle svg{display:block}
+
+/* ---------- tarot faces ---------- */
+.face{--w:120px;width:var(--w);height:calc(var(--w)*1.6);border-radius:calc(var(--w)*.1);position:relative;flex:0 0 auto}
+.face-art{position:absolute;inset:0;border-radius:inherit;background:var(--fc);overflow:hidden;
+  box-shadow:inset 0 0 0 calc(var(--w)*.035) #fff,inset 0 0 0 calc(var(--w)*.05) var(--fd),0 4px 14px rgba(70,40,100,.14);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(var(--w)*.1) calc(var(--w)*.08) calc(var(--w)*.11);text-align:center}
+.face-art .rn{font-size:calc(var(--w)*.12);font-weight:800;color:var(--fd);letter-spacing:.04em;line-height:1}
+.face-art .orb{width:calc(var(--w)*.6);height:calc(var(--w)*.6);border-radius:50%;background:rgba(255,255,255,.75);display:grid;place-items:center;font-size:calc(var(--w)*.32);line-height:1;box-shadow:0 0 0 calc(var(--w)*.02) rgba(255,255,255,.9)}
+.face-art .nm{font-size:calc(var(--w)*.105);font-weight:800;line-height:1.15;color:var(--ink)}
+.face-art .en{font-size:calc(var(--w)*.072);font-weight:500;color:var(--fd);margin-top:2px;line-height:1.1}
+.face-art .st{position:absolute;width:calc(var(--w)*.1);height:calc(var(--w)*.1);color:#fff}
+.face.rev .face-art{transform:rotate(180deg)}
+.cback{border-radius:10px;background-size:100% 100%;background-image:var(--back-img);box-shadow:0 4px 12px rgba(70,40,100,.18)}
+
+/* ---------- home ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px}
+.brand .m{width:34px;height:34px}
+.streak-badge{display:inline-flex;align-items:center;gap:6px;background:var(--card);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;box-shadow:var(--shadow)}
+.hello{position:relative;padding:6px 4px 0}
+.hello p{margin-top:6px}
+.daily{display:flex;flex-direction:column;gap:16px}
+.daily-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.daily-empty{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#F7EEFF,#FDEFF6);border-radius:var(--r-lg);padding:16px}
+.mini-fan{position:relative;width:96px;height:96px;flex:0 0 auto}
+.mini-fan .cback{position:absolute;width:48px;height:76px;left:24px;top:8px;transform-origin:50% 100%}
+.mini-fan .cback:nth-child(1){transform:rotate(-18deg) translateX(-8px)}
+.mini-fan .cback:nth-child(3){transform:rotate(18deg) translateX(8px)}
+.daily-done{display:flex;gap:14px;align-items:flex-start}
+.daily-done .txt{display:flex;flex-direction:column;gap:8px;min-width:0}
+.daily-done h3{font-size:18px;font-weight:800}
+.comeback{background:var(--soft);border-radius:var(--r-md);padding:10px 14px;font-weight:600;font-size:14px;text-align:center}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}
+.day{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;border-radius:16px;background:var(--soft);font-size:12px;font-weight:600;color:var(--muted)}
+.day .b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#fff;font-size:14px}
+.day.done{background:#FFF6CC;color:var(--ink)}
+.day.done .b{background:var(--banana)}
+.day.today{box-shadow:inset 0 0 0 1.5px var(--ink);color:var(--ink)}
+.hscroll{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:4px max(16px,env(safe-area-inset-left,0px)) 10px;scroll-snap-type:x mandatory}
+.hscroll::-webkit-scrollbar{display:none}
+.feat{flex:0 0 172px;scroll-snap-align:start;border-radius:var(--r-lg);padding:16px;min-height:186px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;text-align:left;position:relative;overflow:hidden}
+.feat h3{font-size:16px;font-weight:800;line-height:1.3}
+.feat .ill{display:flex;gap:4px;align-items:flex-end;height:46px}
+.feat .ill i{display:block;width:22px;height:36px;border-radius:5px;background:rgba(255,255,255,.75);box-shadow:0 2px 6px rgba(70,40,100,.1)}
+.feat .ill i:nth-child(2){height:44px}
+.feat .meta{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:600}
+.weekly{display:flex;gap:16px;align-items:center}
+.weekly .txt{display:flex;flex-direction:column;gap:6px;min-width:0}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;bottom:0;left:0;right:0;margin:0 auto;max-width:480px;z-index:20;background:var(--card);border-radius:28px 28px 0 0;box-shadow:0 -6px 24px rgba(96,62,128,.1);
+  padding:8px max(10px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px));display:grid;grid-template-columns:repeat(4,1fr)}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px;font-size:11px;font-weight:600;color:var(--muted)}
+.nav .ic{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;transition:background .2s,transform .2s}
+.nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav button[aria-current="page"]{color:var(--ink)}
+.nav button[aria-current="page"] .ic{background:var(--lime);transform:translateY(-2px)}
+
+/* ---------- spreads page ---------- */
+.sp-list{display:flex;flex-direction:column;gap:12px}
+.sp{display:flex;gap:14px;align-items:center;background:var(--card);border-radius:var(--r-lg);padding:14px;box-shadow:var(--shadow);text-align:left;width:100%;min-height:76px}
+.sp .num{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-weight:800;font-size:17px;flex:0 0 auto;line-height:1.05;text-align:center}
+.sp .num small{display:block;font-size:10.5px;font-weight:600}
+.sp .t{flex:1;min-width:0}
+.sp .t b{display:block;font-size:15.5px}
+.sp .t span{display:block;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp .go{width:36px;height:36px;border-radius:50%;background:var(--lime);display:grid;place-items:center;flex:0 0 auto;font-weight:800}
+
+/* ---------- library ---------- */
+.search{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:999px;padding:0 18px;min-height:52px;box-shadow:var(--shadow)}
+.search input{border:0;outline:0;background:transparent;flex:1;min-width:0;font-size:15px}
+.lib{display:flex;flex-direction:column;gap:10px}
+.lib-row{display:flex;gap:14px;align-items:center;background:var(--card);border-radius:var(--r-md);padding:10px 14px 10px 10px;text-align:left;width:100%;box-shadow:var(--shadow)}
+.lib-row .t{min-width:0;flex:1}
+.lib-row b{display:block}
+.lib-row span{font-size:12.5px;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.empty{text-align:center;padding:26px 18px;display:flex;flex-direction:column;align-items:center;gap:10px}
+
+/* ---------- journal ---------- */
+.jr{display:flex;flex-direction:column;gap:10px}
+.jr-item{background:var(--card);border-radius:var(--r-lg);padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;text-align:left;width:100%}
+.jr-item .row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.jr-item .cards{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- me ---------- */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-weight:600;font-size:14px}
+.field input{min-height:50px;border-radius:16px;border:1.5px solid var(--line);padding:0 14px;background:var(--soft);font-size:16px;width:100%}
+.destiny{display:flex;gap:16px;align-items:center;margin-top:16px}
+.destiny .txt{display:flex;flex-direction:column;gap:6px;min-width:0}
+.qr{width:180px;height:180px;margin:0 auto;border-radius:24px;border:2px dashed #CDB6E8;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:13px;padding:16px;background:var(--soft)}
+
+/* ---------- overlay / sheet ---------- */
+.overlay{position:fixed;top:0;bottom:0;left:0;right:0;margin:0 auto;max-width:480px;z-index:40;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+  background:linear-gradient(180deg,#E6D6F6 0%,#F1E2F1 60%,#F7E8EF 100%);
+  padding:calc(12px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.ov-top{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px}
+.icon-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.8);display:grid;place-items:center;font-size:18px;font-weight:700}
+.ov-body{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding-top:8px}
+.ov-body.left{align-items:stretch;text-align:left}
+.breath{width:210px;height:210px;border-radius:50%;display:grid;place-items:center;position:relative;margin-block:8px}
+.breath::before,.breath::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95),rgba(246,198,230,.55) 60%,rgba(227,211,255,0) 72%);animation:breathe 8s ease-in-out infinite}
+.breath::after{inset:-22px;opacity:.5;animation-delay:.25s}
+.breath .m{width:110px;height:120px;position:relative;z-index:1}
+@keyframes breathe{0%,100%{transform:scale(.82)}50%{transform:scale(1.05)}}
+.breath-txt{font-weight:700;font-size:17px;min-height:26px}
+.name-in{width:100%;text-align:left}
+
+.shuffle-stage{position:relative;height:300px;width:100%;display:grid;place-items:center}
+.sback{position:absolute;width:96px;height:154px;left:calc(50% - 48px);top:calc(50% - 77px);animation:shuf .75s ease-in-out 2}
+@keyframes shuf{0%,50%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate(var(--x1),var(--y1)) rotate(var(--r1))}75%{transform:translate(var(--x2),var(--y2)) rotate(var(--r2))}}
+
+.pick-head{display:flex;flex-direction:column;gap:6px}
+.scroller{position:relative;display:flex;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:64px 0 54px;width:calc(100% + 2*max(16px,env(safe-area-inset-left,0px)));touch-action:pan-x}
+.scroller::-webkit-scrollbar{display:none}
+.spacer{flex:0 0 calc(50% - 38px)}
+.slot{flex:0 0 auto;width:76px;height:122px;margin-left:-32px;transform-origin:50% 120%;will-change:transform}
+.spacer + .slot{margin-left:0}
+.pcard{width:100%;height:100%;display:block;transition:transform .28s cubic-bezier(.3,.7,.3,1.3),box-shadow .28s;animation:deal .5s backwards cubic-bezier(.3,.7,.3,1)}
+.slot.sel .pcard{transform:translateY(-34px);box-shadow:0 0 0 3px #fff,0 0 16px 6px rgba(248,200,222,.95),0 0 32px 12px rgba(230,247,138,.65)}
+@keyframes deal{from{opacity:0;transform:translateY(50px)}}
+.counter{display:inline-flex;gap:6px;align-items:center;background:#fff;border-radius:999px;padding:8px 16px;font-weight:700;box-shadow:var(--shadow)}
+.swipe-hint{font-size:13px;color:var(--muted)}
+
+.rv-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:22px 16px;width:100%}
+.rv-slot{display:flex;flex-direction:column;align-items:center;gap:8px}
+.rv-slot .pos{font-size:13px;font-weight:700;background:#fff;border-radius:999px;padding:4px 12px}
+.flip{width:var(--w);height:calc(var(--w)*1.6);perspective:1100px;border-radius:calc(var(--w)*.1)}
+.flip.pending{visibility:hidden}
+[hidden]{display:none!important}
+.flip{display:block;padding:0}
+.flip-in{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,.7,.25,1)}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.side{display:block;position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:inherit}
+.side.back{border-radius:calc(var(--w)*.1)}
+.side.front{transform:rotateY(180deg)}
+.side.front .face{--w:inherit}
+.flip:not(.on){animation:wiggle 2.4s ease-in-out infinite}
+@keyframes wiggle{0%,86%,100%{transform:rotate(0)}90%{transform:rotate(-2deg)}95%{transform:rotate(2deg)}}
+.rv-slot .rev-tag{visibility:hidden}
+.rv-slot.flipped .rev-tag{visibility:visible}
+#fly{position:fixed;inset:0;pointer-events:none;z-index:60}
+.fly-card{position:fixed;transform-origin:0 0}
+
+.res-card{background:var(--card);border-radius:var(--r-xl);padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+.res-top{display:flex;gap:14px;align-items:flex-start}
+.res-top .txt{display:flex;flex-direction:column;gap:6px;min-width:0}
+.res-top h3{font-size:19px;font-weight:800;line-height:1.25}
+.soft-note{background:#FFF1F6;border-radius:14px;padding:10px 12px;font-size:13.5px;font-weight:500}
+.sum-card{border-radius:var(--r-xl);padding:20px;display:flex;flex-direction:column;gap:10px}
+.sum-card.a{background:linear-gradient(140deg,#F2E9FF,#FCEAF4)}
+.sum-card.b{background:linear-gradient(140deg,#F6FBD9,#FDEFF5)}
+.sum-card h3{font-size:17px;font-weight:800;display:flex;gap:8px;align-items:center}
+.sum-card .m{width:36px;height:40px;flex:0 0 auto}
+.answer{font-size:30px;font-weight:800;text-align:center}
+.actions{display:flex;flex-direction:column;gap:10px}
+
+.sheet-bg{position:fixed;inset:0;background:rgba(43,35,64,.35);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:480px;max-height:88%;overflow-y:auto;background:var(--card);border-radius:30px 30px 0 0;padding:10px max(18px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px;animation:up .3s cubic-bezier(.3,.7,.3,1)}
+.sheet .grab{width:44px;height:5px;border-radius:9px;background:var(--line);margin:4px auto 2px}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.mean-box{background:var(--soft);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+
+.welcome{position:fixed;inset:0;margin:0 auto;max-width:480px;z-index:70;background:linear-gradient(180deg,#E3D3FF 0%,#F6C6E6 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;
+  padding:calc(24px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px))}
+.welcome .m{width:170px;height:184px;animation:bob 3s ease-in-out infinite}
+.welcome-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px}
+.welcome .acts{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-top:6px}
+.welcome .skip{min-height:44px;font-weight:600;color:var(--ink);opacity:.75}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+.twinkle{animation:tw 2.2s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
+
+.toast{position:fixed;left:0;right:0;margin:0 auto;bottom:calc(96px + env(safe-area-inset-bottom,0px));width:max-content;max-width:calc(100% - 32px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:999px;font-size:14px;font-weight:600;z-index:80;box-shadow:0 10px 30px rgba(43,35,64,.3);animation:up .25s}
+
+/* ---------- giai đoạn 2: hồ sơ, chủ đề, chat, story ---------- */
+.top-right{display:flex;align-items:center;gap:8px}
+.avatar-btn{width:44px;height:44px;border-radius:50%;background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;font-weight:800;font-size:16px}
+.welcome{overflow-y:auto;justify-content:safe center}
+.welcome .chip{background:rgba(255,255,255,.65)}
+.welcome .chip[aria-pressed="true"]{background:#fff}
+.ob-form{display:flex;flex-direction:column;gap:16px;width:100%;max-width:360px;text-align:left}
+.ob-form fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.ob-form legend{font-weight:600;font-size:14px;padding:0;margin-bottom:8px}
+.welcome .field input{background:rgba(255,255,255,.8);border-color:transparent}
+.opt-row{display:flex;flex-wrap:wrap;gap:8px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.45}
+.check input{width:22px;height:22px;flex:0 0 auto;accent-color:#8C6AD6;margin:0}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.topic-tile{min-height:78px;border-radius:22px;background:#fff;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:12px 14px;border:2px solid transparent;text-align:left;font-weight:700;font-size:15px}
+.topic-tile .e{font-size:22px;line-height:1}
+.topic-tile[aria-pressed="true"]{border-color:var(--ink);background:var(--lilac)}
+.topic-tile:last-child:nth-child(odd){grid-column:span 2}
+.field textarea{min-height:84px;border-radius:16px;border:1.5px solid var(--line);padding:12px 14px;background:#fff;font:inherit;font-size:16px;width:100%;resize:vertical}
+.ov-body .field input{background:#fff}
+.setup-sec{display:flex;flex-direction:column;gap:10px;width:100%;text-align:left}
+.pos-hint{font-size:13px;color:var(--muted)}
+.chat{background:var(--card);border-radius:var(--r-xl);padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.chat h3{font-size:17px;font-weight:800}
+.msgs{display:flex;flex-direction:column;gap:10px}
+.msg{max-width:90%;padding:10px 14px;border-radius:20px;font-size:14.5px;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.bot{background:var(--soft);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.me{background:#F1FAC4;align-self:flex-end;border-bottom-right-radius:6px}
+.msg .mini{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.msg .mini b{display:block}
+.chat-form{display:flex;gap:8px}
+.chat-form input{flex:1;min-width:0;min-height:48px;border-radius:999px;border:1.5px solid var(--line);padding:0 16px;background:var(--soft);font-size:16px}
+.send{width:48px;height:48px;border-radius:50%;background:var(--grad);font-size:18px;font-weight:800;flex:0 0 auto}
+.send[disabled]{opacity:.5}
+.mini-pick{display:flex;justify-content:center;padding:18px 0 6px 14px}
+.mini-pick button{width:46px;height:74px;margin-left:-14px;transition:transform .2s}
+.mini-pick button:hover,.mini-pick button:focus-visible{transform:translateY(-10px)}
+.story{position:fixed;left:0;top:0;z-index:-1;width:360px;height:640px;background:linear-gradient(180deg,#E3D3FF 0%,#F6C6E6 100%);padding:26px 22px 20px;display:flex;flex-direction:column;gap:14px;color:var(--ink);font-family:var(--font);overflow:hidden}
+.story .st-top{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.story .st-top svg{width:30px;height:32px}
+.story h2{font-size:24px;font-weight:800;line-height:1.2}
+.story .st-cards{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 8px}
+.story .st-c{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10.5px;font-weight:700;text-align:center}
+.story .face-art{box-shadow:none;border:2px solid var(--fd)}
+.story .st-sum{background:rgba(255,255,255,.85);border-radius:22px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.5}
+.story .st-foot{margin-top:auto;font-size:10.5px;text-align:center;color:#6E6380}
+.story-img{width:100%;max-width:280px;border-radius:20px;margin:0 auto;display:block;box-shadow:0 10px 30px rgba(96,62,128,.2)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+
+<div class="app" id="app">
+  <main>
+    <section class="page" id="p-home"></section>
+    <section class="page" id="p-spreads" hidden></section>
+    <section class="page" id="p-library" hidden></section>
+    <section class="page" id="p-journal" hidden></section>
+  </main>
+  <nav class="nav" id="nav" aria-label="Điều hướng chính"></nav>
+</div>
+<div class="overlay" id="flow" hidden role="dialog" aria-modal="true" aria-label="Bốc bài"></div>
+<div id="fly"></div>
+
+<script>
+/* =========================================================
+   DỮ LIỆU LÁ BÀI — giai đoạn 1: 22 lá Ẩn chính
+   m[topic] = [xuôi, ngược]; tone = [xuôi, ngược] (1 sáng, 0 trung tính, -1 cần lưu ý)
+   ========================================================= */
+const MAJORS = [
+ {en:"The Fool",vi:"Chàng Khờ",emoji:"🎒",tone:[1,0],
+  kw:{up:["Khởi đầu mới","Tự do","Hồn nhiên"],down:["Liều lĩnh","Thiếu chuẩn bị","Do dự"]},
+  m:{love:["Một chương mới đang mở ra nè! Nếu đang độc thân, bạn iu dễ gặp ai đó bất ngờ; có đôi rồi thì thử cùng nhau làm điều gì mới mẻ nha 💛","Bạn iu đang lao vào cảm xúc hơi vội á. Chậm lại xíu, tìm hiểu kỹ người ta trước khi trao hết trái tim nha."],
+     work:["Thời điểm đẹp để thử việc mới, ý tưởng mới. Đừng sợ mình chưa giỏi, ai cũng bắt đầu từ con số 0 hết á ✨","Có vẻ bạn iu muốn nhảy việc hay làm liều khi chưa tính kỹ. Lên kế hoạch dự phòng trước rồi hẵng bước nha."],
+     family:["Nhà mình đang có không khí vui vẻ, nhẹ nhàng. Rủ cả nhà đi đâu đó chơi một bữa là hợp lắm nè.","Trong nhà có chút vô tâm nho nhỏ. Bạn iu để ý lời nói và mấy việc nhỏ một xíu là mọi thứ êm ngay."],
+     friends:["Sắp có bạn mới hoặc một chuyến đi chơi bất chợt đó! Cứ mở lòng và tận hưởng nha 🍌","Đừng vì vui quá mà đồng ý mọi lời rủ rê nha bạn iu. Biết nói “không” đúng lúc cũng là thương mình."],
+     self:["Bạn iu đang có năng lượng tươi mới như một đứa trẻ. Cứ tò mò, cứ thử, thế giới rộng lắm á!","Bạn iu đang hơi lạc hướng hoặc sợ bắt đầu. Hít thở, rồi viết ra một bước nhỏ nhất mình làm được hôm nay nha."]}},
+ {en:"The Magician",vi:"Nhà Ảo Thuật",emoji:"🪄",tone:[1,-1],
+  kw:{up:["Hành động","Tài năng","Chủ động"],down:["Thao túng","Thiếu tập trung","Tiềm năng bỏ ngỏ"]},
+  m:{love:["Bạn iu đang có sức hút đặc biệt nè! Muốn gì thì chủ động nói ra, cơ hội nằm trong tay bạn iu đó ✨","Cẩn thận lời ngọt ngào mà thiếu thật lòng nha. Nhìn hành động của người ta, đừng chỉ nghe lời nói."],
+     work:["Bạn iu có đủ kỹ năng và công cụ rồi. Bắt tay làm ngay thôi, kết quả sẽ khiến bạn iu bất ngờ đó!","Bạn iu đang ôm nhiều việc mà chưa dồn sức vào việc nào. Chọn một việc quan trọng nhất và làm cho xong nha."],
+     family:["Bạn iu là người kết nối mọi người trong nhà. Một đề xuất khéo léo của bạn iu sẽ giúp cả nhà vui hơn.","Có ai đó trong nhà đang nói một đằng làm một nẻo. Nói chuyện thẳng thắn mà nhẹ nhàng là cách gỡ tốt nhất nè."],
+     friends:["Bạn iu đang tỏa sáng giữa hội bạn. Rủ mọi người làm một dự án chung hay tổ chức buổi hẹn đi!","Có người bạn đang dựa dẫm vào sự tốt bụng của bạn iu hơi nhiều á. Quan sát kỹ và giữ ranh giới nha."],
+     self:["Bạn iu giỏi hơn bạn iu nghĩ nhiều lắm. Tin vào bản thân và biến ý tưởng thành hành động nha 🪄","Bạn iu đang nghi ngờ khả năng của mình. Liệt kê ra 3 điều bạn iu làm tốt đi, Bánh chúi cá là nhiều hơn 3 á!"]}},
+ {en:"The High Priestess",vi:"Nữ Tư Tế",emoji:"🌙",tone:[0,0],
+  kw:{up:["Trực giác","Bí ẩn","Lắng nghe bên trong"],down:["Bỏ qua trực giác","Bí mật","Rối bời"]},
+  m:{love:["Có điều gì đó chưa được nói ra trong chuyện tình cảm. Bạn iu tin vào cảm giác của mình nha, nó hiếm khi sai lắm.","Có bí mật hoặc cảm xúc đang bị giấu kín. Đừng đoán mò một mình, hỏi nhẹ nhàng sẽ rõ hơn nè."],
+     work:["Chưa phải lúc hành động vội đâu. Quan sát thêm, học thêm, rồi bạn iu sẽ biết nên đi bước nào.","Thông tin trong công việc đang thiếu minh bạch. Bạn iu kiểm tra kỹ giấy tờ và hỏi lại cho chắc nha."],
+     family:["Bạn iu hiểu người nhà nhiều hơn họ nghĩ. Một cái ôm hay sự lắng nghe yên lặng sẽ ý nghĩa lắm.","Trong nhà có chuyện chưa ai nói thẳng. Tạo một không gian an toàn để mọi người mở lòng nha."],
+     friends:["Có người bạn đang cần bạn iu lắng nghe hơn là khuyên. Cứ ở bên họ là đủ rồi 💛","Bạn iu thấy có gì đó sai sai với một người bạn. Đừng phớt lờ cảm giác đó, nhưng cũng đừng vội kết luận nha."],
+     self:["Đây là lúc dành thời gian cho riêng mình, viết nhật ký, thiền một xíu. Câu trả lời có sẵn trong bạn iu rồi 🌙","Bạn iu đang ồn ào bên ngoài mà quên nghe bên trong. Tắt điện thoại 10 phút và hỏi lòng mình thật sự muốn gì nha."]}},
+ {en:"The Empress",vi:"Hoàng Hậu",emoji:"🌸",tone:[1,0],
+  kw:{up:["Yêu thương","Sung túc","Nuôi dưỡng"],down:["Phụ thuộc","Bỏ bê bản thân","Bí ý tưởng"]},
+  m:{love:["Tình cảm đang nở hoa nè 🌸 Bạn iu được yêu thương, chăm sóc, và cũng đang trao đi rất nhiều dịu dàng.","Bạn iu đang cho đi nhiều quá mà quên giữ lại cho mình. Yêu người thì cũng nhớ yêu bản thân nha."],
+     work:["Công việc phát triển đều đặn, ý tưởng sáng tạo dồi dào. Rất hợp để làm dự án sáng tạo hoặc chăm sóc khách hàng.","Bạn iu đang cạn năng lượng sáng tạo. Nghỉ ngơi, đi dạo, ăn món ngon rồi ý tưởng sẽ quay lại thôi."],
+     family:["Gia đình ấm êm, có thể có tin vui về thành viên mới. Nhà là nơi đầy yêu thương.","Ai đó trong nhà đang hơi bao bọc hoặc kiểm soát quá. Thương nhau thì cho nhau chút không gian riêng nha."],
+     friends:["Bạn iu là người dịu dàng, hay chăm lo cho cả hội. Mọi người quý bạn iu lắm đó!","Bạn iu đang gánh chuyện của bạn bè nhiều quá. Giúp được thì giúp, nhưng đừng để mình kiệt sức nha."],
+     self:["Hôm nay hợp để chiều chuộng bản thân: ăn ngon, ngủ đủ, mặc đồ xinh. Bạn iu xứng đáng mà 🌸","Bạn iu đang bỏ bê bản thân rồi đó. Uống nước, ăn đúng bữa và đi ngủ sớm nha, Bánh chúi nhắc đó!"]}},
+ {en:"The Emperor",vi:"Hoàng Đế",emoji:"👑",tone:[1,-1],
+  kw:{up:["Ổn định","Kỷ luật","Bảo vệ"],down:["Cứng nhắc","Kiểm soát","Thiếu kỷ luật"]},
+  m:{love:["Mối quan hệ cần sự cam kết và ổn định. Một người đáng tin, biết lo cho bạn iu đang ở gần đây nè.","Có chút kiểm soát hoặc gia trưởng trong chuyện tình cảm. Tình yêu lành mạnh là khi hai người tôn trọng nhau nha."],
+     work:["Lên kế hoạch rõ ràng và giữ kỷ luật là bạn iu sẽ thành công. Có khi còn được giao vai trò quản lý đó!","Sếp hay quy trình đang hơi cứng nhắc. Bạn iu giữ bình tĩnh, góp ý bằng số liệu và giải pháp cụ thể nha."],
+     family:["Bố hoặc người trụ cột trong nhà đang là chỗ dựa vững chắc. Gia đình có nề nếp và an toàn.","Trong nhà đang hơi căng chuyện ai quyết định. Mỗi người lùi một bước nhỏ, nói chuyện bằng lý lẽ nhẹ nhàng là ổn thôi."],
+     friends:["Bạn iu là người đáng tin trong nhóm. Mọi người sẽ cần bạn iu đứng ra sắp xếp mọi thứ đó.","Đừng áp đặt ý mình lên bạn bè quá nha. Lắng nghe một xíu thì cả hội sẽ vui hơn nhiều."],
+     self:["Bạn iu đang làm chủ cuộc sống của mình. Giữ thói quen tốt, đặt mục tiêu rõ và cứ thế mà tiến 👑","Lịch sinh hoạt của bạn iu hơi lộn xộn rồi. Bắt đầu bằng một thói quen nhỏ thôi, như dậy đúng giờ chẳng hạn."]}},
+ {en:"The Hierophant",vi:"Giáo Hoàng",emoji:"🔑",tone:[1,0],
+  kw:{up:["Truyền thống","Học hỏi","Niềm tin"],down:["Phá lệ","Gò bó","Khác biệt"]},
+  m:{love:["Mối quan hệ hướng tới sự nghiêm túc, có thể ra mắt gia đình hoặc tính chuyện lâu dài nè 💍","Hai bạn có quan điểm khác nhau về chuyện tình cảm. Nói rõ mình muốn gì để không ai phải gượng ép nha."],
+     work:["Học từ người đi trước, làm đúng quy trình sẽ giúp bạn iu tiến bộ nhanh. Tìm một người hướng dẫn đi nha!","Bạn iu thấy bị gò bó bởi quy tắc cũ. Thử đề xuất cách làm mới, nhưng chuẩn bị lý lẽ thật kỹ nha."],
+     family:["Truyền thống gia đình là điểm tựa. Một bữa cơm sum họp sẽ gắn kết mọi người lắm.","Bạn iu và người lớn đang khác thế hệ, khác suy nghĩ. Thấu hiểu trước rồi hẵng thuyết phục nha."],
+     friends:["Hội bạn cùng chí hướng, cùng học cùng tiến. Tham gia một câu lạc bộ cũng là ý hay đó.","Bạn iu thấy lạc lõng giữa nhóm? Không sao đâu, khác biệt không có nghĩa là sai nha."],
+     self:["Bạn iu đang tìm kiếm ý nghĩa và niềm tin. Đọc sách, học thêm điều mới sẽ giúp bạn iu vững vàng.","Đừng sống theo khuôn mẫu người khác đặt ra nữa nha. Bạn iu được phép chọn con đường của riêng mình."]}},
+ {en:"The Lovers",vi:"Tình Nhân",emoji:"💞",tone:[1,-1],
+  kw:{up:["Tình yêu","Hòa hợp","Lựa chọn"],down:["Mất cân bằng","Lưỡng lự","Lệch nhịp"]},
+  m:{love:["Ui lá đẹp quá! 💞 Một kết nối thật sự, hai trái tim chung nhịp. Bạn iu cứ mở lòng đón nhận nha.","Hai bạn đang lệch nhịp xíu, hoặc có điều khiến bạn iu phân vân. Thành thật với cảm xúc của mình là bước đầu tiên nè."],
+     work:["Hợp tác ăn ý với đồng nghiệp. Nếu đứng trước lựa chọn, hãy chọn điều đúng với giá trị của bạn iu.","Bạn iu đang lưỡng lự giữa hai hướng. Viết ra ưu nhược điểm từng bên, lòng sẽ sáng hơn nhiều á."],
+     family:["Gia đình hòa thuận, mọi người hiểu và ủng hộ nhau. Có khi còn có tin vui chuyện cưới hỏi nữa đó!","Nhà mình có bất đồng về một lựa chọn quan trọng. Ngồi lại nghe hết lý do của nhau trước khi quyết nha."],
+     friends:["Có một tình bạn rất hợp cạ đang lớn dần. Trân trọng người bạn hiểu mình nha 💛","Tình bạn đang có hiểu lầm. Một tin nhắn hỏi thăm chân thành có khi gỡ được hết đó."],
+     self:["Bạn iu đang yêu chính mình và sống đúng với giá trị bản thân. Cứ tiếp tục như vậy nha!","Bạn iu đang giằng co giữa điều mình muốn và điều nên làm. Nghe trái tim, nhưng nhớ mang theo lý trí nha."]}},
+ {en:"The Chariot",vi:"Cỗ Xe",emoji:"🐎",tone:[1,-1],
+  kw:{up:["Quyết tâm","Chiến thắng","Tiến lên"],down:["Mất phương hướng","Nóng vội","Bế tắc"]},
+  m:{love:["Bạn iu đang chủ động và quyết tâm trong tình cảm. Muốn tiến tới thì cứ mạnh dạn lên nha 🐎","Tình cảm đang bị kéo về hai hướng khác nhau. Hai bạn cần thống nhất mục tiêu chung trước đã."],
+     work:["Tiến lên thôi! Mục tiêu đã rõ, chỉ cần giữ vững tay lái là bạn iu sẽ về đích.","Bạn iu đang chạy nhanh mà chưa rõ đích đến. Dừng lại xíu, xác định lại ưu tiên rồi hẵng tăng tốc nha."],
+     family:["Cả nhà đang cùng hướng về một mục tiêu, có thể là chuyển nhà hoặc một chuyến đi xa.","Mỗi người trong nhà một hướng nên hơi căng. Tìm điểm chung nhỏ nhất để bắt đầu nói chuyện nha."],
+     friends:["Hội bạn đang cùng nhau chinh phục điều gì đó, biết đâu là một chuyến phượt siêu vui!","Có chút hơn thua ngầm trong nhóm bạn. Đừng để chuyện thắng thua làm mất tình cảm nha bạn iu."],
+     self:["Bạn iu mạnh mẽ và kiên định lắm. Ý chí của bạn iu đang dẫn đường đó ✨","Bạn iu thấy mình mất kiểm soát? Bắt đầu lại từ những việc nhỏ mình làm chủ được nha."]}},
+ {en:"Strength",vi:"Sức Mạnh",emoji:"🦁",tone:[1,-1],
+  kw:{up:["Dịu dàng mà mạnh mẽ","Can đảm","Kiên nhẫn"],down:["Tự ti","Mất bình tĩnh","Yếu lòng"]},
+  m:{love:["Sự dịu dàng và kiên nhẫn của bạn iu sẽ cảm hóa được người ấy. Tình yêu này cần sự bao dung nè 🦁","Bạn iu đang tự ti hoặc dễ nổi nóng trong chuyện tình cảm. Thở sâu trước khi nói nha, mọi chuyện sẽ dễ hơn."],
+     work:["Bạn iu đủ bản lĩnh để vượt qua áp lực. Mềm mỏng mà kiên định là chìa khóa đó.","Bạn iu đang mệt và nghi ngờ bản thân. Nghỉ một chút để nạp năng lượng, không ai mạnh mãi được đâu."],
+     family:["Bạn iu là chỗ dựa tinh thần cho cả nhà. Sự bình tĩnh của bạn iu giúp mọi người an lòng.","Có cảm xúc đang bị dồn nén trong nhà. Cho phép mọi người được nói ra, kể cả bạn iu nha."],
+     friends:["Bạn iu là người bạn đáng tin, biết bảo vệ bạn bè. Ai cũng thấy an toàn khi ở cạnh bạn iu.","Đừng để nỗi sợ bị bỏ rơi khiến bạn iu chiều lòng mọi người quá mức nha."],
+     self:["Bạn iu mạnh mẽ hơn bạn iu nghĩ nhiều lắm. Ôm lấy cả những phần chưa hoàn hảo của mình nha 💛","Hôm nay bạn iu thấy yếu lòng? Không sao hết. Tâm sự với ai đó bạn tin tưởng, hoặc kể Bánh chúi nghe nè."]}},
+ {en:"The Hermit",vi:"Ẩn Sĩ",emoji:"🏮",tone:[0,-1],
+  kw:{up:["Chiêm nghiệm","Một mình","Tìm kiếm"],down:["Cô lập","Khép kín","Lạc lõng"]},
+  m:{love:["Bạn iu cần thời gian một mình để hiểu rõ mình muốn gì trong tình yêu. Không vội đâu nè 🏮","Bạn iu khép lòng hơi lâu rồi. Thử mở cửa một xíu, có người đang muốn đến gần đó."],
+     work:["Tập trung làm việc sâu, nghiên cứu, học thêm. Không cần ồn ào, chất lượng sẽ tự lên tiếng.","Bạn iu đang tự cô lập trong công việc. Hỏi ý kiến đồng nghiệp đi, bạn iu không phải gánh một mình đâu."],
+     family:["Bạn iu cần chút không gian riêng. Nói nhẹ nhàng với người nhà để họ hiểu và tôn trọng nha.","Có người trong nhà đang thu mình. Một lời hỏi han nhỏ có thể làm họ thấy được quan tâm lắm đó."],
+     friends:["Ít bạn nhưng chất lượng. Một buổi cà phê tâm sự sâu với bạn thân là hợp nhất.","Lâu rồi bạn iu chưa liên lạc với bạn bè. Gửi một tin nhắn hỏi thăm thôi cũng được nè."],
+     self:["Thời gian tuyệt vời để nhìn lại bản thân, đọc sách, viết nhật ký. Ngọn đèn trong bạn iu đang sáng lắm.","Ở một mình lâu quá dễ buồn lắm á. Ra ngoài phơi nắng, gặp ai đó cho tinh thần tươi lên nha 🌙"]}},
+ {en:"Wheel of Fortune",vi:"Bánh Xe Số Phận",emoji:"🎡",tone:[1,-1],
+  kw:{up:["May mắn","Bước ngoặt","Chu kỳ"],down:["Xui tạm thời","Ngại thay đổi","Trì hoãn"]},
+  m:{love:["Bánh xe quay rồi! Một bước ngoặt bất ngờ trong tình cảm, có thể là duyên mới hoặc người cũ quay về 🎡","Tình cảm đang ở vòng đi xuống, nhưng bánh xe sẽ quay tiếp mà. Kiên nhẫn và chăm sóc bản thân trước nha."],
+     work:["Cơ hội đang đến! Có thể là thăng chức, dự án mới hay một lời mời bất ngờ. Nắm lấy nha bạn iu!","Công việc gặp trục trặc ngoài tầm kiểm soát. Đừng tự trách nha, tập trung vào phần mình làm được thôi."],
+     family:["Nhà mình sắp có thay đổi tích cực. Mọi chuyện đang dần tốt lên đó.","Gia đình đang qua giai đoạn khó. Rồi sẽ qua thôi, quan trọng là mọi người vẫn ở cạnh nhau."],
+     friends:["Một cuộc gặp tình cờ có thể mở ra tình bạn mới. Cứ để vũ trụ sắp xếp nha ✨","Có thể có người bạn đang dần xa. Mọi thứ đều có chu kỳ, trân trọng những gì đang có nha."],
+     self:["Vận may đang đứng về phía bạn iu! Cứ thử, cứ tin, mọi thứ đang xoay đúng hướng.","Bạn iu thấy kẹt trong vòng lặp cũ? Thay đổi một thói quen nhỏ để phá vòng đó nha."]}},
+ {en:"Justice",vi:"Công Lý",emoji:"⚖️",tone:[1,-1],
+  kw:{up:["Công bằng","Sự thật","Trách nhiệm"],down:["Bất công","Né tránh","Thiếu trung thực"]},
+  m:{love:["Mối quan hệ cần sự công bằng, cho và nhận cân bằng. Thẳng thắn với nhau là mọi thứ sẽ rõ ràng ⚖️","Có sự thiếu công bằng hoặc thiếu trung thực ở đây. Bạn iu xứng đáng với một tình yêu minh bạch nha."],
+     work:["Nỗ lực của bạn iu sẽ được ghi nhận xứng đáng. Chuyện giấy tờ, hợp đồng cũng thuận lợi đó.","Bạn iu thấy bị đối xử không công bằng? Ghi lại mọi thứ rõ ràng và trao đổi bằng bằng chứng nha."],
+     family:["Chuyện trong nhà được giải quyết công bằng, ai cũng thấy thỏa đáng.","Có chút thiên vị hoặc bất bình trong nhà. Nói ra cảm nhận của mình một cách bình tĩnh, đừng ôm trong lòng nha."],
+     friends:["Sự thật sẽ được làm sáng tỏ, hiểu lầm cũ sẽ được gỡ. Cứ sống ngay thẳng là được.","Có ai đó trong nhóm chưa thật lòng. Bạn iu đừng dính vào drama, giữ mình nhẹ nhàng nha."],
+     self:["Bạn iu đang sống có trách nhiệm với bản thân. Mỗi lựa chọn hôm nay sẽ tạo nên ngày mai.","Bạn iu đang khắt khe với mình quá, hoặc đang né một sự thật. Đối diện nhẹ nhàng thôi, có Bánh chúi ở đây nè."]}},
+ {en:"The Hanged Man",vi:"Người Treo Ngược",emoji:"🙃",tone:[0,-1],
+  kw:{up:["Tạm dừng","Góc nhìn mới","Buông bỏ"],down:["Trì trệ","Hy sinh vô ích","Bướng bỉnh"]},
+  m:{love:["Chuyện tình cảm đang tạm dừng lại. Thử nhìn từ góc độ của người ấy, bạn iu sẽ hiểu ra nhiều điều 🙃","Bạn iu đang hy sinh quá nhiều mà không nhận lại gì. Đến lúc hỏi lại: mình có đang hạnh phúc không?"],
+     work:["Chưa nên hành động vội. Đây là lúc lùi lại, đổi cách nghĩ, giải pháp sẽ tự hiện ra.","Công việc đang dậm chân tại chỗ. Thử một cách làm hoàn toàn khác xem sao nha bạn iu."],
+     family:["Một chút nhường nhịn sẽ giúp nhà mình êm ấm. Nhìn từ phía người kia sẽ thấy dễ thương hơn đó.","Bạn iu đang gánh hy sinh một mình trong nhà. Lên tiếng nhờ giúp đỡ không có gì sai đâu nha."],
+     friends:["Tạm gác chuyện hơn thua lại. Đôi khi để mọi chuyện lắng xuống là cách tốt nhất.","Đừng chờ người khác thay đổi mãi nha. Nếu mệt quá, bạn iu được phép lùi ra."],
+     self:["Chậm lại không có nghĩa là thua. Nghỉ ngơi xíu, rồi bạn iu sẽ thấy mọi thứ rõ hơn.","Bạn iu đang kẹt trong suy nghĩ cũ. Thử làm một điều chưa từng làm, nhỏ thôi cũng được nè."]}},
+ {en:"Death",vi:"Sự Chuyển Hóa",emoji:"🦋",tone:[0,-1],
+  kw:{up:["Kết thúc","Chuyển hóa","Trang mới"],down:["Níu kéo","Sợ thay đổi","Dang dở"]},
+  m:{love:["Đừng sợ tên lá nha! Lá này là sự khép lại một giai đoạn để mở ra điều tốt hơn. Cái cũ qua đi, cái mới đến 🦋","Bạn iu đang níu kéo điều đã hết. Buồn xíu, nhưng buông tay đúng lúc là thương chính mình đó."],
+     work:["Một giai đoạn công việc khép lại, cửa mới đang mở. Có thể là đổi việc hoặc đổi vai trò.","Bạn iu biết là cần thay đổi nhưng vẫn sợ. Bắt đầu chuẩn bị từ từ, từng bước nhỏ thôi nha."],
+     family:["Gia đình bước sang trang mới, có thể là chuyển nhà hay một thay đổi lớn. Rồi mọi thứ sẽ tốt hơn.","Có chuyện cũ chưa được giải quyết trong nhà. Đến lúc nhẹ nhàng khép nó lại rồi đó."],
+     friends:["Có tình bạn sẽ tự nhiên rời đi, nhường chỗ cho người hợp hơn. Đó là chuyện bình thường nè.","Bạn iu đang cố giữ một tình bạn đã không còn vui. Cảm ơn họ trong lòng và nhẹ nhàng bước tiếp nha."],
+     self:["Bạn iu đang lột xác như bướm vậy đó! Phiên bản mới của bạn iu sẽ xịn hơn nhiều 🦋","Thay đổi đáng sợ thật, Bánh chúi hiểu mà. Nhưng ở lại chỗ cũ mãi còn mệt hơn. Mình cùng bước một bước nhỏ nha."]}},
+ {en:"Temperance",vi:"Tiết Chế",emoji:"🍵",tone:[1,-1],
+  kw:{up:["Cân bằng","Hài hòa","Kiên nhẫn"],down:["Mất cân bằng","Quá đà","Vội vàng"]},
+  m:{love:["Tình cảm êm đềm, hai bạn biết dung hòa cho nhau. Chậm mà chắc, ngọt như trà sữa 🍵","Một người cho quá nhiều, một người nhận quá nhiều. Cân lại cán cân xíu nha bạn iu."],
+     work:["Cân bằng giữa làm và nghỉ, mọi việc tiến triển đều đặn. Đừng vội, bạn iu đang đi đúng nhịp.","Bạn iu đang làm quá sức hoặc chi tiêu hơi quá tay. Điều chỉnh lại nhịp sống một chút nha."],
+     family:["Bạn iu là người hòa giải trong nhà. Sự điềm đạm của bạn iu giúp mọi người dịu lại.","Cả nhà đang hơi căng thẳng. Một bữa ăn chung không bàn chuyện nặng nề sẽ giúp nhiều lắm."],
+     friends:["Tình bạn nhẹ nhàng, ai cũng thoải mái. Giữ mức vừa phải là bền lâu nhất.","Bạn iu đang đi chơi quá đà hay ôm chuyện bạn bè quá nhiều. Về nhà nghỉ ngơi một buổi nha."],
+     self:["Bạn iu đang sống cân bằng và khỏe mạnh. Ăn uống điều độ, ngủ đủ, tâm trí an yên ✨","Cơ thể và tâm trí bạn iu đang lệch nhịp. Uống nhiều nước, ngủ sớm và bớt cà phê xíu nha."]}},
+ {en:"The Devil",vi:"Ác Quỷ",emoji:"😈",tone:[-1,1],
+  kw:{up:["Ràng buộc","Cám dỗ","Thói quen xấu"],down:["Giải thoát","Tỉnh táo","Buông bỏ"]},
+  m:{love:["Có sự ràng buộc, ghen tuông hoặc cuốn vào cảm xúc chưa lành mạnh. Bạn iu thử tự hỏi: mình ở lại vì yêu hay vì sợ? Bánh chúi luôn ở đây nè.","Bạn iu đang dần thoát khỏi một mối quan hệ độc hại hoặc cách yêu chưa đúng. Giỏi lắm đó, cứ tiếp tục nha!"],
+     work:["Bạn iu đang bị trói vào công việc vì tiền hoặc áp lực. Nhận ra là bước đầu rồi, giờ mình tính đường lui từ từ nha.","Bạn iu đang dần lấy lại quyền làm chủ trong công việc. Mạnh dạn nói “không” với điều không hợp lý nha."],
+     family:["Có sự kiểm soát hoặc thói quen chưa tốt trong nhà khiến mọi người mệt. Đặt ranh giới nhẹ nhàng mà rõ ràng nha.","Những ràng buộc cũ trong nhà đang được tháo gỡ. Mọi người bắt đầu hiểu nhau hơn rồi."],
+     friends:["Cẩn thận những cuộc vui quá đà hay người bạn kéo bạn iu vào điều không tốt nha.","Bạn iu đã nhận ra ai là bạn thật. Rời xa mối quan hệ độc hại là quyết định đúng đó."],
+     self:["Bạn iu đang mắc kẹt trong một thói quen chưa tốt (thức khuya, lướt điện thoại, chi tiêu...). Chọn một cái để bớt dần từ hôm nay nha, Bánh chúi cổ vũ nè!","Bạn iu đang tự giải phóng mình khỏi xiềng xích cũ. Tự hào về bạn iu lắm luôn 💛"]}},
+ {en:"The Tower",vi:"Tòa Tháp",emoji:"⚡",tone:[-1,0],
+  kw:{up:["Biến động","Sụp đổ","Thức tỉnh"],down:["Né tránh khủng hoảng","Đổi thay từ bên trong","Dư chấn"]},
+  m:{love:["Có thể có biến cố bất ngờ trong tình cảm. Nhưng những gì sụp đổ là để lộ ra sự thật. Bạn iu giữ bình tĩnh và chăm mình trước nha.","Bạn iu đang né một cuộc nói chuyện khó. Đối diện sớm thì đỡ đau hơn đó, Bánh chúi tin bạn iu làm được."],
+     work:["Có thể có thay đổi đột ngột ở chỗ làm. Chuẩn bị sẵn phương án B và giữ tinh thần vững nha, sau bão là trời quang.","Bạn iu thấy dấu hiệu bất ổn nhưng chưa dám thay đổi. Chủ động đổi trước khi mọi thứ vỡ là khôn ngoan đó."],
+     family:["Nhà mình có thể gặp chuyện bất ngờ. Mọi người đoàn kết lại, cùng nhau thì chuyện gì cũng qua được.","Có căng thẳng âm ỉ trong nhà. Giải tỏa từng chút một trước khi nó bùng lên nha bạn iu."],
+     friends:["Có thể có cãi vã hay một sự thật bất ngờ trong nhóm bạn. Bình tĩnh nhìn lại, ai thật lòng sẽ ở lại.","Bạn iu đang cố giữ hòa khí bề ngoài. Đôi khi nói thật sẽ tốt cho tình bạn hơn đó."],
+     self:["Niềm tin cũ của bạn iu đang lung lay. Đau xíu, nhưng đó là lúc bạn iu xây lại một nền móng vững hơn ⚡","Bạn iu đang thay đổi lặng lẽ từ bên trong. Cứ để quá trình diễn ra, đừng vội ép mình nha."]}},
+ {en:"The Star",vi:"Ngôi Sao",emoji:"⭐",tone:[1,-1],
+  kw:{up:["Hy vọng","Chữa lành","Cảm hứng"],down:["Mất niềm tin","Nản lòng","Mệt mỏi"]},
+  m:{love:["Hy vọng đang trở lại nè ⭐ Vết thương cũ dần lành, và một tình cảm nhẹ nhàng, trong trẻo đang đến.","Bạn iu đang mất niềm tin vào tình yêu. Không sao đâu, chữa lành cho mình trước, tình yêu đúng sẽ đến sau."],
+     work:["Cảm hứng dâng trào! Ước mơ của bạn iu hoàn toàn có thể thành hiện thực, cứ kiên trì nha.","Bạn iu đang nản vì chưa thấy kết quả. Nhìn lại quãng đường đã đi, bạn iu tiến xa lắm rồi đó."],
+     family:["Gia đình bình yên, mọi người dần hàn gắn và tin tưởng nhau hơn.","Không khí trong nhà hơi trầm. Một điều nhỏ dễ thương như nấu món cả nhà thích sẽ thắp lại niềm vui."],
+     friends:["Bạn bè truyền cảm hứng cho nhau. Có người bạn đang ngưỡng mộ bạn iu lắm đó ✨","Bạn iu thấy cô đơn giữa đám đông? Tìm về một người bạn cũ thân thiết nha."],
+     self:["Bạn iu đang được chữa lành từng chút một. Cứ tin, cứ mơ, vũ trụ đang lắng nghe đó ⭐","Hôm nay bạn iu thấy mệt và mất hy vọng. Ngủ một giấc thật ngon, mai trời lại sáng thôi, Bánh chúi hứa."]}},
+ {en:"The Moon",vi:"Mặt Trăng",emoji:"🌕",tone:[-1,1],
+  kw:{up:["Mơ hồ","Lo âu","Trực giác"],down:["Sáng tỏ","Vượt qua nỗi sợ","Gỡ hiểu lầm"]},
+  m:{love:["Chuyện tình cảm đang mập mờ, có điều chưa rõ ràng. Đừng vội tin hay vội nghi, cho thêm thời gian để mọi thứ lộ diện nha 🌕","Mây mù tan dần rồi nè! Hiểu lầm được gỡ, bạn iu sẽ thấy rõ lòng người ấy hơn."],
+     work:["Thông tin chưa đầy đủ, dễ có hiểu lầm. Kiểm tra kỹ trước khi quyết định hoặc ký kết gì nha.","Sự thật trong công việc đang được làm rõ. Nỗi lo của bạn iu sẽ nhẹ đi nhiều."],
+     family:["Có điều chưa được nói rõ khiến nhà hơi bất an. Hỏi han nhẹ nhàng, đừng đoán mò nha.","Lo lắng trong nhà dần được giải tỏa. Mọi người hiểu nhau hơn rồi."],
+     friends:["Có tin đồn hoặc hiểu lầm trong nhóm bạn. Đừng tin vội, hỏi thẳng người trong cuộc nha.","Bạn iu đã nhìn ra ai thật ai giả. Nhẹ lòng rồi đúng không nè?"],
+     self:["Bạn iu đang lo âu và suy nghĩ nhiều. Viết nỗi lo ra giấy, sẽ thấy nó nhỏ hơn mình tưởng đó.","Bạn iu đang dần vượt qua nỗi sợ của mình. Trăng lặn rồi, bình minh sắp tới 🌙"]}},
+ {en:"The Sun",vi:"Mặt Trời",emoji:"☀️",tone:[1,0],
+  kw:{up:["Niềm vui","Thành công","Rạng rỡ"],down:["Vui bị che khuất","Kỳ vọng quá","Chậm hơn mong đợi"]},
+  m:{love:["Lá rạng rỡ nhất bộ luôn ☀️ Tình yêu ấm áp, hạnh phúc. Bạn iu cứ vui hết mình nha!","Tình cảm vẫn vui nhưng có đám mây nhỏ. Bớt kỳ vọng xíu và tận hưởng những điều giản dị nha."],
+     work:["Thành công rực rỡ! Bạn iu được công nhận và tỏa sáng. Ăn mừng thôi!","Kết quả có chậm hơn mong đợi chút, nhưng vẫn tốt. Kiên nhẫn thêm, mặt trời vẫn ở đó mà."],
+     family:["Gia đình hạnh phúc, tiếng cười rộn ràng. Có khi còn có tin vui về con cái nữa đó.","Nhà mình vui nhưng ai cũng bận. Dành một buổi tối chơi cùng nhau đi bạn iu."],
+     friends:["Những ngày vui với bạn bè, đi chơi chụp ảnh tưng bừng. Tận hưởng đi nè 🌻","Bạn iu hơi buồn vì thấy bị bạn bè quên? Chủ động rủ mọi người đi, ai cũng sẽ vui lắm."],
+     self:["Bạn iu đang tỏa sáng như mặt trời. Tự tin, vui vẻ, khỏe mạnh. Bánh chúi tự hào ghê!","Niềm vui của bạn iu hơi bị che khuất. Ra ngoài phơi nắng, nghe bài hát yêu thích, mood lên liền á."]}},
+ {en:"Judgement",vi:"Phán Xét",emoji:"📯",tone:[1,-1],
+  kw:{up:["Thức tỉnh","Tha thứ","Tiếng gọi"],down:["Tự trách","Bỏ lỡ","Do dự"]},
+  m:{love:["Đến lúc nhìn lại và đưa ra quyết định quan trọng trong tình cảm. Có thể là tha thứ, hoặc cho nhau cơ hội mới 📯","Bạn iu đang trách mình vì chuyện cũ. Quá khứ đã qua rồi, bạn iu xứng đáng được bắt đầu lại."],
+     work:["Một tiếng gọi mới trong sự nghiệp! Đây là lúc bạn iu bước lên tầm cao hơn.","Bạn iu đang do dự nên dễ bỏ lỡ cơ hội. Đừng để nỗi sợ quyết định thay bạn iu nha."],
+     family:["Hàn gắn và tha thứ. Những khúc mắc cũ trong nhà sẽ được hóa giải.","Còn khúc mắc cũ trong nhà chưa nguôi. Một lời xin lỗi hoặc cảm ơn sẽ mở cánh cửa đó."],
+     friends:["Bạn cũ quay lại, hoặc hai người làm hòa sau hiểu lầm. Vui ghê!","Đừng phán xét bạn bè vội nha. Ai cũng có lý do riêng của họ."],
+     self:["Bạn iu đang thức tỉnh, hiểu rõ mình là ai và muốn gì. Bước ngoặt đẹp lắm đó.","Bạn iu đang tự phán xét bản thân quá khắt khe. Tha thứ cho mình đi, bạn iu đã cố gắng nhiều lắm rồi 💛"]}},
+ {en:"The World",vi:"Thế Giới",emoji:"🌍",tone:[1,0],
+  kw:{up:["Hoàn thành","Trọn vẹn","Thành tựu"],down:["Dang dở","Thiếu một chút","Trì hoãn kết thúc"]},
+  m:{love:["Tình cảm trọn vẹn và viên mãn 🌍 Có thể là một bước tiến lớn như về chung một nhà đó!","Mối quan hệ còn thiếu một mảnh ghép. Nói chuyện để tìm ra điều hai bạn còn cần nha."],
+     work:["Hoàn thành mục tiêu lớn, gặt hái thành quả xứng đáng. Có khi còn có cơ hội đi xa nữa!","Dự án đang dang dở. Cố thêm một xíu nữa thôi, vạch đích ngay trước mắt rồi."],
+     family:["Gia đình viên mãn, mọi người đều thấy đủ đầy và hạnh phúc.","Còn chút việc nhà chưa xong. Chia việc rõ ràng, cùng nhau làm là nhanh lắm."],
+     friends:["Hội bạn đã cùng nhau đi qua một chặng đường đẹp. Tổ chức một buổi kỷ niệm đi nha!","Có chuyện với bạn bè chưa có hồi kết. Khép nó lại nhẹ nhàng để ai cũng thoải mái nha."],
+     self:["Bạn iu đã đi trọn một vòng và trưởng thành hơn nhiều. Chúc mừng bạn iu nha 🎉","Bạn iu sắp tới đích rồi mà hơi đuối. Nghỉ chút xíu thôi rồi về đích nha, Bánh chúi chờ nè!"]}}
+];
+const ROMAN=["0","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI"];
+const PAL=[{bg:"#F6C6E6",d:"#B4518E"},{bg:"#E3D3FF",d:"#7357C0"},{bg:"#BFE6FA",d:"#2F7EAA"},{bg:"#E6F78A",d:"#6E861A"},{bg:"#FFE2B8",d:"#B56E22"}];
+/* Giai đoạn 4 sẽ thêm 56 lá Ẩn phụ vào mảng này (suit: wands/cups/swords/pentacles). */
+const CARDS = MAJORS.map((c,i)=>({id:"m"+i,suit:"major",num:i,...c}));
+const SUITS={major:"Ẩn chính",wands:"Gậy",cups:"Cốc",swords:"Kiếm",pentacles:"Tiền"};
+
+const TOPICS={love:{label:"Tình yêu",low:"tình yêu",emo:"💞"},work:{label:"Công việc",low:"công việc",emo:"💼"},family:{label:"Gia đình",low:"gia đình",emo:"🏡"},friends:{label:"Bạn bè",low:"bạn bè",emo:"🫶"},self:{label:"Bản thân",low:"bản thân",emo:"🌱"}};
+
+/* Danh sách trải bài */
+const SPREADS=[
+ {id:"daily",name:"Lá bài hôm nay",group:"self",n:1,pos:["Lá hôm nay"],desc:"1 lá theo chủ đề bạn iu chọn"},
+ {id:"yesno",name:"Có hay Không",group:"self",n:1,pos:["Câu trả lời"],topic:"self",desc:"Hỏi nhanh, đáp gọn",askQ:1,pickTopic:1},
+ {id:"ppf",name:"Quá khứ – Hiện tại – Tương lai",group:"self",n:3,pos:["Quá khứ","Hiện tại","Tương lai"],topic:"self",pickTopic:1},
+ {id:"think",name:"Người ấy nghĩ gì về bạn",group:"love",n:3,pos:["Suy nghĩ","Cảm xúc","Hành động sắp tới"],topic:"love",askName:1},
+ {id:"crush",name:"Crush có thích mình không",group:"love",n:3,pos:["Ấn tượng về bạn","Cảm xúc thật","Khả năng tiến xa"],topic:"love",askName:1},
+ {id:"love6",name:"Tổng quan tình yêu",group:"love",n:6,pos:["Họ","Bạn","Mối quan hệ","Trở ngại","Tương lai","Lời khuyên"],topic:"love"},
+ {id:"ex",name:"Người cũ có quay lại không",group:"love",n:5,pos:["Lý do chia tay","Họ bây giờ","Khả năng quay lại","Có nên không","Lời khuyên"],topic:"love",askName:1},
+ {id:"next",name:"Người sắp đến",group:"love",n:4,pos:["Người đó là ai","Gặp ở đâu","Khi nào","Bạn cần chuẩn bị gì"],topic:"love"},
+ {id:"work6",name:"Tổng quan công việc",group:"work",n:6,pos:["Hiện tại","Điểm mạnh","Thử thách","Cơ hội","Hướng đi","Lời khuyên"],topic:"work"},
+ {id:"quit",name:"Có nên nghỉ/đổi việc",group:"work",n:5,pos:["Công việc hiện tại","Điều bạn thật sự muốn","Nếu ở lại","Nếu rời đi","Lời khuyên"],topic:"work"},
+ {id:"money",name:"Tài chính",group:"work",n:4,pos:["Dòng tiền hiện tại","Chỗ đang hao hụt","Cơ hội","Lời khuyên"],topic:"work"},
+ {id:"study",name:"Thi cử & học tập",group:"work",n:3,pos:["Năng lực hiện tại","Trở ngại","Kết quả & lời khuyên"],topic:"work"},
+ {id:"rel",name:"Quan hệ với một người",group:"rel",n:5,pos:["Bạn","Họ","Điều kết nối","Điều gây rạn nứt","Cách hàn gắn"],topic:"friends",askName:1},
+ {id:"ab",name:"Chọn A hay B",group:"rel",n:5,pos:["Bạn hiện tại","Nếu chọn A","Kết quả A","Nếu chọn B","Kết quả B"],topic:"self",askName:2},
+ {id:"bms",name:"Thân – Tâm – Hồn",group:"self",n:3,pos:["Thân","Tâm","Hồn"],topic:"self"},
+ {id:"heal",name:"Chữa lành & yêu bản thân",group:"self",n:5,pos:["Vết thương","Điều cần buông","Điều cần giữ","Món quà của bạn","Bước tiếp theo"],topic:"self"},
+ {id:"celtic",name:"Celtic Cross",group:"adv",n:10,pos:["Hiện tại","Thử thách","Nền tảng","Quá khứ","Mục tiêu","Tương lai gần","Bản thân","Môi trường","Hy vọng & nỗi sợ","Kết quả"],topic:"self",pickTopic:1},
+ {id:"year",name:"12 tháng tới",group:"adv",n:12,pos:[],topic:"self",desc:"Mỗi tháng một lá, bắt đầu từ tháng này",pickTopic:1}
+];
+const GROUPS={all:"Tất cả",love:"Tình yêu",work:"Sự nghiệp & Tiền",rel:"Quan hệ",self:"Bản thân",adv:"Nâng cao"};
+const GROUP_BG={love:"#F6C6E6",work:"#BFE6FA",rel:"#FFE2B8",self:"#E3D3FF",adv:"#E6F78A"};
+/* Ý nghĩa từng vị trí, {n} = tên người ấy, {a}/{b} = hai lựa chọn */
+const POS_INFO={
+ "Lá hôm nay":"Năng lượng chính đi cùng bạn iu hôm nay.","Câu trả lời":"Lá trả lời trực tiếp câu hỏi của bạn iu.",
+ "Quá khứ":"Điều đã qua nhưng vẫn còn ảnh hưởng tới bạn iu.","Hiện tại":"Chuyện đang diễn ra ngay lúc này.","Tương lai":"Hướng mọi thứ đang đi tới nếu giữ nhịp như bây giờ.",
+ "Suy nghĩ":"Điều {n} đang nghĩ trong đầu về bạn iu.","Cảm xúc":"Cảm xúc thật trong lòng {n}.","Hành động sắp tới":"Điều {n} có thể làm trong thời gian tới.",
+ "Ấn tượng về bạn":"{n} đang thấy bạn iu như thế nào.","Cảm xúc thật":"Tình cảm thật sự {n} dành cho bạn iu.","Khả năng tiến xa":"Chuyện này có thể đi xa tới đâu.",
+ "Họ":"Năng lượng và tâm thế của người kia.","Bạn":"Bạn iu đang đứng ở đâu trong chuyện này.","Mối quan hệ":"Bức tranh chung của hai người.",
+ "Trở ngại":"Điều đang cản bước, cần để ý.","Lời khuyên":"Lời nhắn lá bài gửi riêng cho bạn iu.",
+ "Lý do chia tay":"Gốc rễ của lần chia xa.","Họ bây giờ":"{n} hiện đang ra sao.","Khả năng quay lại":"Cửa quay lại đang mở hay đang khép.","Có nên không":"Quay lại có thật sự tốt cho bạn iu không.",
+ "Người đó là ai":"Tính cách và năng lượng của người sắp đến.","Gặp ở đâu":"Hoàn cảnh hai người có thể gặp nhau.","Khi nào":"Thời điểm, hoặc dấu hiệu báo người ấy đang tới.","Bạn cần chuẩn bị gì":"Điều bạn iu nên vun đắp trước.",
+ "Điểm mạnh":"Thế mạnh bạn iu nên tận dụng.","Thử thách":"Khó khăn đang đặt ra trước mặt.","Cơ hội":"Cánh cửa đang hé mở.","Hướng đi":"Con đường hợp với bạn iu.",
+ "Công việc hiện tại":"Công việc bây giờ đang mang lại gì cho bạn iu.","Điều bạn thật sự muốn":"Mong muốn sâu bên trong bạn iu.","Nếu ở lại":"Chuyện gì xảy ra nếu bạn iu ở lại.","Nếu rời đi":"Chuyện gì xảy ra nếu bạn iu rời đi.",
+ "Dòng tiền hiện tại":"Tình hình tiền bạc lúc này.","Chỗ đang hao hụt":"Tiền đang rò rỉ ở đâu.",
+ "Năng lực hiện tại":"Bạn iu đang ở mức nào rồi.","Kết quả & lời khuyên":"Kết quả có thể đạt và điều nên làm.",
+ "Điều kết nối":"Điều gắn hai người lại với nhau.","Điều gây rạn nứt":"Điều đang làm hai người xa cách.","Cách hàn gắn":"Cách để mọi thứ êm lại.",
+ "Thân":"Cơ thể và sức khỏe của bạn iu.","Tâm":"Suy nghĩ và cảm xúc.","Hồn":"Tinh thần và điều nuôi dưỡng bên trong.",
+ "Vết thương":"Nỗi đau cần được nhìn thấy và ôm lấy.","Điều cần buông":"Điều bạn iu nên nhẹ nhàng thả ra.","Điều cần giữ":"Điều quý giá nên ôm thật chặt.","Món quà của bạn":"Điều đẹp đẽ bạn iu đang có sẵn.","Bước tiếp theo":"Một bước nhỏ để đi tiếp.",
+ "Bạn hiện tại":"Tâm thế của bạn iu trước lựa chọn này.","Nếu chọn A":"Con đường của {a}.","Kết quả A":"Nơi {a} dẫn bạn iu tới.","Nếu chọn B":"Con đường của {b}.","Kết quả B":"Nơi {b} dẫn bạn iu tới.",
+ "Nền tảng":"Gốc rễ sâu xa của vấn đề.","Mục tiêu":"Điều bạn iu đang hướng tới.","Tương lai gần":"Chuyện sắp xảy ra.","Bản thân":"Cách bạn iu đang nhìn chính mình.","Môi trường":"Người và hoàn cảnh xung quanh.","Hy vọng & nỗi sợ":"Điều bạn iu mong, mà cũng sợ.","Kết quả":"Kết cục khả dĩ nhất nếu mọi thứ giữ nguyên."
+};
+const ADVICE_POS=["Lời khuyên","Bước tiếp theo","Cách hàn gắn","Kết quả & lời khuyên","Bạn cần chuẩn bị gì","Có nên không","Kết quả"];
+
+/* =========================================================
+   GOOGLE FORM — điền link & mã câu hỏi vào đây là web tự gửi
+   action: link form, đổi đuôi /viewform thành /formResponse
+   fields: mã entry.xxxxx của từng câu (lấy từ "Nhận đường liên kết điền sẵn")
+   Lưu ý: chỉ gửi được khi web chạy trên tên miền riêng (Netlify, GitHub Pages…),
+   trong khung xem trước của Claude trình duyệt sẽ chặn.
+   ========================================================= */
+const GOOGLE_FORM={action:"https://docs.google.com/forms/d/e/1FAIpQLSdxf8RkrCjtGpoe2TvvDyQZunrQFvCIdPiJZFZnZL9hteFWZA/formResponse",fields:{name:"entry.386979594",gender:"entry.1091919739",age:"entry.2013355831"}};
+function sendToForm(p){
+  if(!GOOGLE_FORM.action||!GOOGLE_FORM.fields.name)return;
+  try{const body=new URLSearchParams();
+    body.append(GOOGLE_FORM.fields.name,p.name);body.append(GOOGLE_FORM.fields.gender,p.gender);body.append(GOOGLE_FORM.fields.age,p.age);
+    fetch(GOOGLE_FORM.action,{method:"POST",mode:"no-cors",body}).catch(()=>{});
+  }catch(e){}
+}
+
+/* =========================================================
+   TIỆN ÍCH
+   ========================================================= */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+const pad=n=>String(n).padStart(2,"0");
+const dkey=(d=new Date())=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const monday=(d=new Date())=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());const w=(x.getDay()+6)%7;return addDays(x,-w)};
+const hash=s=>{let h=2166136261;for(const ch of s){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const byId=id=>CARDS.find(c=>c.id===id);
+const vibrate=ms=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}};
+const clip=(s,n)=>s.length>n?s.slice(0,n-1).replace(/\s+\S*$/,"")+"…":s;
+function toast(msg){$$(".toast").forEach(t=>t.remove());const t=document.createElement("div");t.className="toast";t.setAttribute("role","status");t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2800)}
+function sheet(html){const bg=document.createElement("div");bg.className="sheet-bg";bg.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${html}</div>`;document.body.appendChild(bg);
+  bg.addEventListener("click",e=>{if(e.target===bg||e.target.closest("[data-close]"))bg.remove()});return bg}
+
+/* Khả năng chạy trong Claude: hỏi AI và lưu file. Không có thì tự ẩn/thay bằng bản offline */
+let SAMPLE=null,DL=null;
+(async()=>{try{if(window.claude&&claude.use){claude.use("sample").then(s=>{SAMPLE=s}).catch(()=>{});claude.use("downloads").then(d=>{DL=d}).catch(()=>{})}}catch(e){}})();
+
+/* ---------- hồ sơ người dùng ---------- */
+let PROFILE=store.get("bc_profile",null);
+const nick=()=>(PROFILE&&PROFILE.name)||"";
+const youi=()=>nick()||"bạn iu";
+const Youi=()=>nick()||"Bạn iu";
+/* Có tên thì mọi chữ "bạn iu" trên web đổi thành tên luôn */
+function nameText(t){const n=nick();if(!n||!t||!/[bB]ạn iu/.test(t))return t;return t.replace(/bạn iu/g,n).replace(/Bạn iu/g,n)}
+function nameify(root){if(!nick())return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let x;const list=[];while(x=w.nextNode())if(/[bB]ạn iu/.test(x.nodeValue))list.push(x);
+  list.forEach(t=>t.nodeValue=nameText(t.nodeValue));
+  if(root.querySelectorAll)root.querySelectorAll("[placeholder],[aria-label]").forEach(el=>{["placeholder","aria-label"].forEach(a=>{const v=el.getAttribute(a);if(v&&/[bB]ạn iu/.test(v))el.setAttribute(a,nameText(v))})})}
+new MutationObserver(ms=>{if(!nick())return;for(const m of ms){if(m.type==="characterData"){const t=m.target;if(/[bB]ạn iu/.test(t.nodeValue))t.nodeValue=nameText(t.nodeValue)}else m.addedNodes.forEach(n=>{if(n.nodeType===3){if(/[bB]ạn iu/.test(n.nodeValue))n.nodeValue=nameText(n.nodeValue)}else if(n.nodeType===1)nameify(n)})}})
+ .observe(document.body,{subtree:true,childList:true,characterData:true});
+
+/* ---------- SVG ---------- */
+const STAR='<svg viewBox="0 0 24 24" width="100%" height="100%"><path fill="currentColor" d="M12 1.5 14 10l8.5 2-8.5 2-2 8.5-2-8.5L1.5 12 10 10z"/></svg>';
+function mascot(cls="m",style=""){return `<svg class="${cls}" ${style?`style="${style}"`:""} viewBox="0 0 120 130" aria-hidden="true">
+ <ellipse cx="62" cy="124" rx="26" ry="4.5" fill="rgba(80,50,110,.13)"/>
+ <path d="M31 77q-9 1-11-7" stroke="#EDB93C" stroke-width="5" fill="none" stroke-linecap="round"/>
+ <path d="M90 74q9-1 10-9" stroke="#EDB93C" stroke-width="5" fill="none" stroke-linecap="round"/>
+ <rect x="55" y="3" width="10" height="15" rx="4" fill="#9B7445"/>
+ <path d="M60 14C38 18 28 46 30 74c2 26 18 42 34 40 20-2 30-20 26-44-4-24-14-44-26-56z" fill="#FFE07A"/>
+ <path d="M68 20c15 18 24 46 20 66-2 12-8 20-16 24 12-10 15-30 11-48-3-16-9-30-15-42z" fill="#F5C445"/>
+ <path d="M41 46c-4 14-4 30 0 42" stroke="#FFF4C2" stroke-width="5" fill="none" stroke-linecap="round"/>
+ <ellipse cx="64" cy="114" rx="4" ry="2.6" fill="#9B7445"/>
+ <ellipse cx="52" cy="70" rx="3.4" ry="4.4" fill="#3A2A2F"/><ellipse cx="72" cy="70" rx="3.4" ry="4.4" fill="#3A2A2F"/>
+ <circle cx="53.3" cy="68.4" r="1.2" fill="#fff"/><circle cx="73.3" cy="68.4" r="1.2" fill="#fff"/>
+ <ellipse cx="45" cy="79" rx="5.5" ry="3.2" fill="#F8A9C8" opacity=".85"/><ellipse cx="79" cy="79" rx="5.5" ry="3.2" fill="#F8A9C8" opacity=".85"/>
+ <path d="M57 78q5 6 10 0" stroke="#3A2A2F" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+</svg>`}
+const BACK_SVG=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 160"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C9B2F2"/><stop offset="1" stop-color="#F3B9DA"/></linearGradient><pattern id="p" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="1" fill="#fff" opacity=".55"/><path d="M14 11l1 3 3 1-3 1-1 3-1-3-3-1 3-1z" fill="#fff" opacity=".45"/></pattern></defs><rect width="100" height="160" rx="10" fill="url(#g)"/><rect width="100" height="160" rx="10" fill="url(#p)"/><rect x="6" y="6" width="88" height="148" rx="7" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.6"/><rect x="10" y="10" width="80" height="140" rx="5" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="1" stroke-dasharray="2 3"/><circle cx="50" cy="80" r="21" fill="#fff" fill-opacity=".92"/><circle cx="50" cy="80" r="25" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1"/><g transform="translate(37 66)"><rect x="5" y="0" width="4" height="5" rx="1.5" fill="#9B7445"/><path d="M6 4C2 12 6 25 22 25c3 0 4-3 2-4C13 20 9 13 10 5 10 3 7 2 6 4z" fill="#FFD95A"/><path d="M8 7c0 7 3 12 10 14" stroke="#F0B93A" stroke-width="1.4" fill="none" stroke-linecap="round"/></g><path d="M50 26l1.6 4.4 4.4 1.6-4.4 1.6L50 38l-1.6-4.4-4.4-1.6 4.4-1.6z" fill="#fff"/><path d="M50 122l1.6 4.4 4.4 1.6-4.4 1.6L50 134l-1.6-4.4-4.4-1.6 4.4-1.6z" fill="#fff"/></svg>`;
+document.documentElement.style.setProperty("--back-img",`url("data:image/svg+xml,${encodeURIComponent(BACK_SVG)}")`);
+
+function faceHTML(card,w=120,rev=false){
+  const p=card.suit==="major"?PAL[card.num%PAL.length]:PAL[0];
+  const rn=card.suit==="major"?ROMAN[card.num]:card.num;
+  return `<div class="face${rev?" rev":""}" style="--w:${w}px" role="img" aria-label="${esc(card.vi)}${rev?" (ngược)":""}">
+   <div class="face-art" style="--fc:${p.bg};--fd:${p.d}">
+    <span class="st" style="top:8%;right:10%">${STAR}</span><span class="st" style="bottom:30%;left:9%;transform:scale(.7)">${STAR}</span>
+    <div class="rn">${rn}</div><div class="orb">${card.emoji}</div>
+    <div><div class="nm">${esc(card.vi)}</div><div class="en">${esc(card.en)}</div></div>
+   </div></div>`;
+}
+const tone=(c,rev)=>c.tone[rev?1:0];
+const meaning=(c,topic,rev)=>c.m[topic][rev?1:0];
+const kws=(c,rev)=>c.kw[rev?"down":"up"];
+const HARD_NOTE="Lá này hơi khó chịu xíu, nhưng có Bánh chúi ở đây nè, mình cùng xem nên làm gì nha.";
+const DISCLAIMER="Tarot chỉ để tham khảo thui nha, tương lai nằm trong tay bạn iu đó 💛";
+
+/* ---------- vị trí & tên ---------- */
+function yearPos(){const d=new Date(),out=[];for(let i=0;i<12;i++){const x=new Date(d.getFullYear(),d.getMonth()+i,1);out.push(`Tháng ${x.getMonth()+1}/${x.getFullYear()}`)}return out}
+function fillN(s,names){return s.replace(/\{n\}/g,names[0]||"người ấy").replace(/\{a\}/g,`“${names[0]||"A"}”`).replace(/\{b\}/g,`“${names[1]||"B"}”`)}
+function posLabel(sp,pos,names){
+  if(sp.askName===2)return pos.replace(/ A$/,` “${names[0]||"A"}”`).replace(/ B$/,` “${names[1]||"B"}”`);
+  if(sp.askName===1&&names[0]&&(pos==="Họ"))return names[0];
+  return pos;
+}
+const qt=s=>s.includes("“")?s:`“${s}”`;
+function posHint(sp,pos,names){const t=POS_INFO[pos];if(t)return fillN(t,names);if(sp.id==="year")return `Năng lượng chính của ${pos.toLowerCase()}.`;return ""}
+
+/* =========================================================
+   LỜI GIẢI — tách riêng để sau này thay bằng AI
+   BanhChuiInterpreter.interpret(reading) → Promise<{summary, message}>
+   ========================================================= */
+const MSG_POOL={
+  1:["Bạn iu cứ tự tin bước tới nha, Bánh chúi đứng sau cổ vũ nè 🍌✨","Hôm nay là ngày của bạn iu đó, nhớ cười thật nhiều nha 💛","Năng lượng đẹp vầy thì làm gì cũng thuận nè, nhưng nhớ uống đủ nước nha!"],
+  0:["Chậm một xíu cũng không sao, miễn là bạn iu đi đúng hướng mình muốn 🌙","Nghe lòng mình nhiều hơn một chút nha bạn iu, câu trả lời ở đó rồi.","Mọi thứ đang dần rõ ra, bạn iu kiên nhẫn thêm xíu nha ✨"],
+  "-1":["Bạn iu không cần mạnh mẽ cả ngày đâu. Mệt thì nghỉ, buồn thì khóc, rồi mình đứng dậy tiếp nha 💛","Lá bài chỉ là lời nhắc, không phải bản án. Bạn iu luôn có quyền viết lại câu chuyện của mình.","Ôm bạn iu một cái thật chặt nè 🍌 Chuyện gì rồi cũng qua, có Bánh chúi ở đây với bạn iu."]
+};
+function localInterpret(r){
+  const sp=SPREADS.find(s=>s.id===r.spread), n=r.cards.length, names=r.names||[];
+  const avg=r.cards.reduce((a,c)=>a+tone(c.card,c.rev),0)/n;
+  const lvl=avg>0.34?1:avg<-0.34?-1:0;
+  const tp=TOPICS[r.topic]||TOPICS.self, Y=Youi();
+  let summary;
+  if(n===1){
+    const c=r.cards[0].card,k=kws(c,r.cards[0].rev);
+    if(r.spread==="yesno"){
+      summary=lvl===1?`Lá ${c.vi} gật đầu với ${youi()} nè! Năng lượng ${k[0].toLowerCase()} và ${k[1].toLowerCase()} đang ủng hộ điều ${youi()} hỏi, cứ mạnh dạn nha ✨`
+        :lvl===0?`Lá ${c.vi} chưa trả lời dứt khoát đâu. Mọi thứ còn tùy vào cách ${youi()} chuẩn bị, nhất là chuyện ${k[0].toLowerCase()}. Cho thêm chút thời gian nha 🌙`
+        :`Lá ${c.vi} khuyên ${youi()} chưa nên vội. Có chút ${k[0].toLowerCase()} cần xử lý trước. Biết sớm là để chuẩn bị tốt hơn, chứ không phải để buồn đâu nha 💛`;
+    }else{
+      summary=lvl===1?`Hôm nay năng lượng ${tp.low} của ${youi()} sáng sủa lắm nè! Lá ${c.vi} mang theo ${k[0].toLowerCase()} và ${k[1].toLowerCase()}, nên cứ tự tin mà tiến nha ✨`
+        :lvl===0?`Lá ${c.vi} nhắc ${youi()} rằng chuyện ${tp.low} hôm nay cần thêm chút ${k[0].toLowerCase()} và ${k[1].toLowerCase()}. Không xấu đâu, chỉ cần chậm lại và lắng nghe nhiều hơn xíu thôi 🌙`
+        :`Lá ${c.vi} cho thấy chuyện ${tp.low} đang có chút ${k[0].toLowerCase()}. Bánh chúi nói thật để ${youi()} chuẩn bị, chứ không phải để lo đâu. Biết trước là nắm phần thắng rồi đó 💛`;
+    }
+  }else{
+    const lab=c=>posLabel(sp,c.pos,names);
+    const good=r.cards.filter(c=>tone(c.card,c.rev)>0).length, hard=r.cards.filter(c=>tone(c.card,c.rev)<0).length;
+    const best=r.cards.slice().sort((a,b)=>tone(b.card,b.rev)-tone(a.card,a.rev))[0];
+    const worst=r.cards.slice().sort((a,b)=>tone(a.card,a.rev)-tone(b.card,b.rev))[0];
+    const who=sp.askName===1&&names[0]?` về ${names[0]}`:"";
+    summary=`Trải “${sp.name}”${who} theo chủ đề ${tp.low} có ${good} lá sáng và ${hard} lá cần lưu ý. Điểm sáng nhất là ${qt(lab(best))} với lá ${best.card.vi}`+
+      (tone(worst.card,worst.rev)<0?`, còn ${qt(lab(worst))} (${worst.card.vi}) là chỗ ${youi()} nên để tâm hơn.`:".");
+    if(sp.id==="ab"){
+      const sA=tone(r.cards[1].card,r.cards[1].rev)+tone(r.cards[2].card,r.cards[2].rev), sB=tone(r.cards[3].card,r.cards[3].rev)+tone(r.cards[4].card,r.cards[4].rev);
+      const A=`“${names[0]||"A"}”`,B=`“${names[1]||"B"}”`;
+      summary+=sA>sB?` So hai đường thì ${A} đang sáng hơn nè.`:sB>sA?` So hai đường thì ${B} đang sáng hơn nè.`:` Hai lựa chọn đang ngang nhau, nên ${youi()} hãy chọn điều làm mình thấy nhẹ lòng hơn nha.`;
+    }else if(sp.id==="ex"||sp.id==="crush"){
+      const key=r.cards[sp.id==="ex"?2:1], t=tone(key.card,key.rev);
+      summary+=t>0?` Lá ${key.card.vi} ở ${qt(lab(key))} cho thấy cửa đang mở đó.`:t<0?` Lá ${key.card.vi} ở ${qt(lab(key))} cho thấy lúc này cửa còn khép, ${youi()} chăm mình trước nha.`:` Lá ${key.card.vi} ở ${qt(lab(key))} cho thấy mọi thứ còn để ngỏ.`;
+    }
+    summary+=lvl===1?" Nhìn chung mọi thứ đang thuận lắm nè ✨":lvl===0?" Nhìn chung đang cân bằng, quan trọng là cách bạn iu chọn bước tiếp 🌙":" Hơi nhiều thử thách xíu, nhưng lá nào cũng có lời khuyên kèm theo, mình làm từng bước nha 💛";
+  }
+  const pool=MSG_POOL[lvl], message=pool[hash(r.cards.map(c=>c.card.id).join()+r.ts)%pool.length];
+  return {summary,message,level:lvl};
+}
+window.BanhChuiInterpreter={interpret:async r=>localInterpret(r)};
+function yesNo(c,rev){const t=tone(c,rev);return t>0?{t:"CÓ nè! 💛",s:"Câu trả lời nghiêng về phía Có"}:t<0?{t:"Chưa phải lúc 🌙",s:"Câu trả lời nghiêng về phía Không"}:{t:"Còn lửng lơ ✨",s:"Có thể, tùy vào bạn iu"}}
+
+/* =========================================================
+   DỮ LIỆU NGƯỜI DÙNG
+   ========================================================= */
+const getDaily=()=>store.get("bc_daily",{});
+function setDaily(topic,id,rev){const d=getDaily(),k=dkey();d[k]=d[k]||{};d[k][topic]={id,rev,ts:Date.now()};store.set("bc_daily",d)}
+const todayDraw=topic=>(getDaily()[dkey()]||{})[topic];
+function drawnSet(){const d=getDaily();return new Set(Object.keys(d).filter(k=>Object.keys(d[k]||{}).length))}
+function streak(){const s=drawnSet();let d=new Date();if(!s.has(dkey(d)))d=addDays(d,-1);let n=0;while(s.has(dkey(d))){n++;d=addDays(d,-1)}return n}
+const getJournal=()=>store.get("bc_journal",[]);
+function packReading(r){return {key:r.key,ts:r.ts,spread:r.spread,topic:r.topic,names:r.names||[],question:r.question||"",pos:r.pos||null,
+  cards:r.cards.map(c=>({id:c.card.id,rev:c.rev,pos:c.pos})),chat:(r.chat||[]).map(m=>({role:m.role,text:m.text,card:m.card||null})),qa:r.qa||""}}
+function saveJournal(r){const j=getJournal();if(j.some(e=>e.key===r.key))return false;j.unshift(packReading(r));store.set("bc_journal",j.slice(0,200));return true}
+function updateJournal(r){const j=getJournal(),i=j.findIndex(e=>e.key===r.key);if(i<0)return;j[i]=packReading(r);store.set("bc_journal",j)}
+const inJournal=key=>getJournal().some(e=>e.key===key);
+
+/* =========================================================
+   NAV
+   ========================================================= */
+const NAV=[
+ {id:"home",label:"Trang chủ",ic:'<path d="M4 11.2 12 4.5l8 6.7V19a1.5 1.5 0 0 1-1.5 1.5H15v-5.5H9v5.5H5.5A1.5 1.5 0 0 1 4 19z"/>'},
+ {id:"spreads",label:"Trải bài",ic:'<rect x="3.6" y="6.2" width="8" height="13" rx="2" transform="rotate(-10 7.6 12.7)"/><rect x="12.4" y="5" width="8" height="13" rx="2" transform="rotate(8 16.4 11.5)"/>'},
+ {id:"library",label:"Thư viện lá",ic:'<path d="M5 5.5A2 2 0 0 1 7 3.5h11v14H7a2 2 0 0 0-2 2z"/><path d="M5 19.5a2 2 0 0 0 2 2h11v-4"/><path d="m11.5 7.5.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8L9 10l1.8-.7z"/>'},
+ {id:"journal",label:"Nhật ký",ic:'<rect x="5" y="3.5" width="14" height="17" rx="3"/><path d="M9 8.5h6M9 12h6M9 15.5h3"/>'}
+];
+let TAB="home";
+function renderNav(){
+  $("#nav").innerHTML=NAV.map(n=>`<button data-tab="${n.id}" ${n.id===TAB?'aria-current="page"':""}><span class="ic"><svg viewBox="0 0 24 24">${n.ic}</svg></span>${n.label}</button>`).join("");
+}
+function go(tab){
+  TAB=tab;renderNav();
+  $$(".page").forEach(p=>p.hidden=p.id!=="p-"+tab);
+  ({home:renderHome,spreads:renderSpreads,library:renderLibrary,journal:renderJournal})[tab]();
+  window.scrollTo(0,0);
+}
+$("#nav").addEventListener("click",e=>{const b=e.target.closest("button[data-tab]");if(b)go(b.dataset.tab)});
+const FOOT='<p class="foot">Bánh chúi Tarot chỉ mang tính giải trí.</p>';
+
+/* =========================================================
+   TRANG CHỦ
+   ========================================================= */
+let homeTopic=store.get("bc_topic","love");
+function greeting(){const h=new Date().getHours(),y=youi();
+  if(h>=5&&h<11)return[`Chào buổi sáng, ${y} ☀️`,"Ngủ ngon không nè? Bốc một lá cho ngày mới nha."];
+  if(h>=11&&h<13)return[`Chào buổi trưa, ${y} 🍱`,"Ăn trưa chưa đó? Nghỉ xíu rồi hỏi Bánh chúi nè."];
+  if(h>=13&&h<18)return[`Chào buổi chiều, ${y} 🌤️`,"Chiều nay có gì làm bạn iu băn khoăn không nè?"];
+  if(h>=18&&h<23)return[`Chào buổi tối, ${y} 🌙`,"Hôm nay bạn iu muốn hỏi Bánh chúi điều gì nè?"];
+  return[`Khuya rồi nè, ${y} 🌙`,"Bốc một lá rồi đi ngủ sớm nha, Bánh chúi nhắc đó."];}
+function destinyCard(iso){
+  const digits=iso.replace(/\D/g,"").split("").map(Number);let sum=digits.reduce((a,b)=>a+b,0);const steps=[`${digits.join("+")} = ${sum}`];
+  while(sum>22){const ds=String(sum).split("").map(Number);sum=ds.reduce((a,b)=>a+b,0);steps.push(`${ds.join("+")} = ${sum}`)}
+  return {card:CARDS[sum===22?0:sum],steps,num:sum};
+}
+function destinyHTML(){
+  const bd=store.get("bc_birth","");let res="";
+  if(bd){const {card,steps,num}=destinyCard(bd);
+    res=`<div class="weekly" style="margin-top:16px">${faceHTML(card,84)}<div class="txt"><span class="eyebrow">Lá chủ mệnh của ${esc(youi())}</span><b style="font-size:17px">${esc(card.vi)}</b>
+     <span class="muted" style="font-size:12px">${steps.join(" → ")}${num===22?" → 22 là Chàng Khờ":""}</span></div></div>
+     <p style="margin-top:12px">${esc(meaning(card,"self",false))}</p>
+     <div class="kws" style="margin-top:10px">${card.kw.up.map(k=>`<span class="kw">${k}</span>`).join("")}</div>`;}
+  return `<div class="card" id="destiny"><div class="sec-head" style="padding:0;margin-bottom:12px"><h2 class="h-sec">Lá bài chủ mệnh 🌟</h2><span class="muted" style="font-size:13px">Theo ngày sinh</span></div>
+   <form id="birth-form" class="field"><label for="birth">Ngày sinh của ${esc(youi())}</label><input id="birth" type="date" value="${esc(bd)}" max="${dkey()}" required>
+   <button class="btn-ghost btn-block" style="margin-top:8px">${bd?"Xem lại lá chủ mệnh":"Xem lá chủ mệnh"}</button></form>${res}</div>`;
+}
+function renderHome(){
+  const [g,sub]=greeting(), st=streak(), s=drawnSet(), mon=monday(), tk=dkey();
+  const days=["T2","T3","T4","T5","T6","T7","CN"].map((l,i)=>{const d=addDays(mon,i),k=dkey(d);
+    return `<div class="day${s.has(k)?" done":""}${k===tk?" today":""}"><span>${l}</span><span class="b">${s.has(k)?"🍌":(k===tk?"✨":"")}</span></div>`}).join("");
+  const draw=todayDraw(homeTopic), dd=(getDaily()[tk]||{});
+  const chips=Object.entries(TOPICS).map(([k,t])=>`<button class="chip" data-topic="${k}" aria-pressed="${k===homeTopic}">${t.label}${dd[k]?'<span class="dot" aria-label="đã bốc"></span>':""}</button>`).join("");
+  let body;
+  if(draw){const c=byId(draw.id);
+    body=`<div class="daily-done">${faceHTML(c,92,draw.rev)}
+      <div class="txt"><span class="eyebrow">${TOPICS[homeTopic].label} · hôm nay</span><h3>${esc(c.vi)}</h3>
+      <div class="kws">${draw.rev?'<span class="pill rev">Ngược</span>':""}${kws(c,draw.rev).slice(0,2).map(k=>`<span class="kw">${k}</span>`).join("")}</div>
+      <p>${esc(meaning(c,homeTopic,draw.rev))}</p></div></div>
+      <button class="btn-ghost btn-block" id="see-daily">Xem lời giải & chat với Bánh chúi</button>
+      <p class="comeback">Mai quay lại với Bánh chúi nha 💛</p>`;
+  }else{
+    body=`<div class="daily-empty"><div class="mini-fan"><span class="cback"></span><span class="cback"></span><span class="cback"></span></div>
+      <p>Mỗi chủ đề được chọn <b>1 lá</b> mỗi ngày nè. Hít thở thật sâu rồi tự tay chọn lá có duyên với ${esc(youi())} nha.</p></div>
+      <button class="btn-main btn-block" id="draw-daily">Bốc lá ${TOPICS[homeTopic].low} hôm nay ✨</button>`;
+  }
+  const wk=weeklyCard(), wEnd=addDays(mon,6);
+  const feat=["yesno","ppf","crush","love6","work6","heal"].map(id=>{const sp=SPREADS.find(x=>x.id===id);
+    return `<button class="feat" data-spread="${id}" style="background:${GROUP_BG[sp.group]}">
+      <div class="ill"><i></i><i></i><i></i></div><h3>${sp.name}</h3>
+      <div class="meta"><span>${sp.n} lá</span><span class="pill" style="background:#fff">Bốc ngay</span></div></button>`}).join("");
+  const init=nick()?esc(nick().trim()[0].toUpperCase()):"🍌";
+  $("#p-home").innerHTML=`
+   <div class="top"><div class="brand">${mascot("m")}Bánh chúi Tarot</div><div class="top-right"><span class="streak-badge">🍌 ${st} ngày</span><button class="avatar-btn" id="edit-profile" aria-label="Sửa thông tin của bạn">${init}</button></div></div>
+   <div class="hello"><h1 class="h-big">${esc(g)}</h1><p class="muted">${sub}</p></div>
+   <div class="card daily"><div class="daily-head"><h2 class="h-sec">Lá bài hôm nay</h2><span class="muted" style="font-size:13px">${pad(new Date().getDate())}/${pad(new Date().getMonth()+1)}</span></div>
+     <div class="chips" id="topic-chips">${chips}</div>${body}</div>
+   <div class="card"><div class="sec-head" style="padding:0"><h2 class="h-sec">Chuỗi ngày bốc bài</h2><span class="muted" style="font-size:13px;white-space:nowrap">${st?`${st} ngày liền 🔥`:"Bắt đầu hôm nay nha"}</span></div>
+     <div class="week">${days}</div></div>
+   <div class="sec-head"><h2 class="h-sec">Trải bài nổi bật</h2><button class="muted" data-goto="spreads" style="min-height:44px;font-weight:600">Xem hết</button></div>
+   <div class="hscroll">${feat}</div>
+   <div class="card"><div class="sec-head" style="padding:0;margin-bottom:14px"><h2 class="h-sec">Thông điệp tuần</h2><span class="muted" style="font-size:13px">${pad(mon.getDate())}/${pad(mon.getMonth()+1)} – ${pad(wEnd.getDate())}/${pad(wEnd.getMonth()+1)}</span></div>
+     <div class="weekly">${faceHTML(wk,84)}<div class="txt"><span class="eyebrow">Lá của tuần</span><b style="font-size:17px">${esc(wk.vi)}</b><p>${esc(meaning(wk,"self",false))}</p></div></div></div>
+   ${destinyHTML()}
+   ${FOOT}`;
+}
+function weeklyCard(){return CARDS[hash("week-"+dkey(monday()))%CARDS.length]}
+$("#p-home").addEventListener("click",e=>{
+  const chip=e.target.closest("[data-topic]");
+  if(chip){homeTopic=chip.dataset.topic;store.set("bc_topic",homeTopic);renderHome();return}
+  if(e.target.closest("#edit-profile")){profileSheet();return}
+  if(e.target.closest("#draw-daily")){Flow.open("daily",{topic:homeTopic});return}
+  if(e.target.closest("#see-daily")){const key="daily-"+dkey()+"-"+homeTopic,en=getJournal().find(x=>x.key===key);
+    if(en){openJournalEntry(en);return}
+    const d=todayDraw(homeTopic);Flow.showSaved({spread:"daily",topic:homeTopic,ts:d.ts,key,cards:[{card:byId(d.id),rev:d.rev,pos:"Lá hôm nay"}]});return}
+  const sp=e.target.closest("[data-spread]");if(sp){openSpread(sp.dataset.spread);return}
+  if(e.target.closest("[data-goto]"))go("spreads");
+});
+$("#p-home").addEventListener("submit",e=>{if(e.target.id!=="birth-form")return;e.preventDefault();const v=$("#birth").value;if(!v){toast("Bạn iu nhập ngày sinh giúp Bánh chúi nha");return}
+  store.set("bc_birth",v);renderHome();const d=$("#destiny");d&&d.scrollIntoView({behavior:RM?"auto":"smooth",block:"start"})});
+function openSpread(id){if(id==="daily"){go("home");return}Flow.open(id)}
+
+/* =========================================================
+   TRẢI BÀI
+   ========================================================= */
+let spGroup="all";
+function renderSpreads(){
+  const list=SPREADS.filter(s=>spGroup==="all"||s.group===spGroup);
+  $("#p-spreads").innerHTML=`<div class="hello"><h1 class="h-big">Trải bài</h1><p class="muted">${esc(Youi())} đang băn khoăn chuyện gì nè? Chọn trải hợp nhất nha.</p></div>
+   <div class="chips" id="sp-chips">${Object.entries(GROUPS).map(([k,v])=>`<button class="chip" data-g="${k}" aria-pressed="${k===spGroup}">${v}</button>`).join("")}</div>
+   <div class="sp-list">${list.map(s=>`<button class="sp" data-spread="${s.id}"><span class="num" style="background:${GROUP_BG[s.group]}">${s.n}<small>lá</small></span>
+     <span class="t"><b>${s.name}</b><span>${s.desc||s.pos.join(" · ")}</span></span><span class="go" aria-hidden="true">›</span></button>`).join("")}
+     ${spGroup==="all"||spGroup==="self"?`<button class="sp" data-destiny><span class="num" style="background:#FFF6CC">🌟</span><span class="t"><b>Lá bài chủ mệnh</b><span>Tính theo ngày sinh, không bốc ngẫu nhiên</span></span><span class="go" aria-hidden="true">›</span></button>`:""}</div>
+   ${FOOT}`;
+}
+$("#p-spreads").addEventListener("click",e=>{
+  const g=e.target.closest("[data-g]");if(g){spGroup=g.dataset.g;renderSpreads();return}
+  if(e.target.closest("[data-destiny]")){go("home");const d=$("#destiny");d&&d.scrollIntoView({block:"start"});return}
+  const sp=e.target.closest("[data-spread]");if(sp)openSpread(sp.dataset.spread);
+});
+
+/* =========================================================
+   THƯ VIỆN
+   ========================================================= */
+let libSuit="all",libQ="";
+function renderLibrary(){
+  if(!$("#lib-q")){
+    $("#p-library").innerHTML=`<div class="hello"><h1 class="h-big">Thư viện lá</h1><p class="muted">Tra nghĩa từng lá cùng Bánh chúi nè.</p></div>
+    <label class="search"><span aria-hidden="true">🔍</span><input id="lib-q" type="search" placeholder="Tìm tên lá, từ khóa…" aria-label="Tìm lá bài"></label>
+    <div class="chips" id="lib-chips"></div><div id="lib-list"></div>${FOOT}`;
+    $("#lib-q").addEventListener("input",e=>{libQ=e.target.value;drawLib()});
+  }
+  drawLib();
+}
+const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/đ/g,"d").replace(/Đ/g,"D").toLowerCase();
+function drawLib(){
+  $("#lib-chips").innerHTML=Object.entries({all:"Tất cả",...SUITS}).map(([k,v])=>`<button class="chip" data-s="${k}" aria-pressed="${k===libSuit}">${v}</button>`).join("");
+  const q=norm(libQ.trim());
+  const list=CARDS.filter(c=>(libSuit==="all"||c.suit===libSuit)&&(!q||norm(c.vi+" "+c.en+" "+c.kw.up.join(" ")+" "+c.kw.down.join(" ")).includes(q)));
+  const minorEmpty=libSuit!=="all"&&libSuit!=="major"&&!q;
+  $("#lib-list").innerHTML=list.length?`<div class="lib">${list.map(c=>`<button class="lib-row" data-card="${c.id}">${faceHTML(c,52)}<span class="t"><b>${esc(c.vi)}</b><span>${esc(c.en)} · ${c.kw.up.join(", ")}</span></span></button>`).join("")}</div>`
+    :`<div class="card empty">${mascot("m","width:70px;height:76px")}<b>${minorEmpty?`Bộ ${SUITS[libSuit]} Bánh chúi đang viết nghĩa nè`:"Bánh chúi chưa tìm thấy lá nào"}</b><p class="muted">${minorEmpty?"Sắp có đủ 56 lá Ẩn phụ, bạn iu đợi xíu nha 🍌":"Thử từ khóa khác xem nha bạn iu."}</p></div>`;
+}
+$("#p-library").addEventListener("click",e=>{
+  const s=e.target.closest("[data-s]");if(s){libSuit=s.dataset.s;drawLib();return}
+  const c=e.target.closest("[data-card]");if(c)cardSheet(byId(c.dataset.card));
+});
+function cardSheet(c){
+  let t="love";
+  const bg=document.createElement("div");bg.className="sheet-bg";
+  const draw=()=>{bg.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(c.vi)}"><div class="grab"></div>
+   <div style="display:flex;gap:16px;align-items:center">${faceHTML(c,104)}<div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span class="eyebrow">${SUITS[c.suit]} · ${c.suit==="major"?ROMAN[c.num]:c.num}</span><h3 style="font-size:22px;font-weight:800">${esc(c.vi)}</h3><span class="muted">${esc(c.en)}</span></div></div>
+   <div class="mean-box"><b>Xuôi</b><div class="kws">${c.kw.up.map(k=>`<span class="kw" style="background:#fff">${k}</span>`).join("")}</div></div>
+   <div class="mean-box"><b>Ngược</b><div class="kws">${c.kw.down.map(k=>`<span class="kw" style="background:#fff">${k}</span>`).join("")}</div></div>
+   <div class="chips">${Object.entries(TOPICS).map(([k,v])=>`<button class="chip" data-t="${k}" aria-pressed="${k===t}">${v.label}</button>`).join("")}</div>
+   <div class="mean-box"><b>Khi xuôi</b><p>${esc(c.m[t][0])}</p></div>
+   <div class="mean-box" style="background:#FFF1F6"><b>Khi ngược</b><p>${esc(c.m[t][1])}</p></div>
+   <button class="btn-ghost btn-block" data-close>Đóng</button></div>`};
+  draw();document.body.appendChild(bg);
+  bg.addEventListener("click",e=>{if(e.target===bg||e.target.closest("[data-close]")){bg.remove();return}
+    const ch=e.target.closest("[data-t]");if(ch){const sc=$(".sheet",bg).scrollTop;t=ch.dataset.t;draw();$(".sheet",bg).scrollTop=sc;$(".sheet",bg).style.animation="none"}});
+}
+
+/* =========================================================
+   NHẬT KÝ
+   ========================================================= */
+function renderJournal(){
+  const j=getJournal();
+  $("#p-journal").innerHTML=`<div class="hello"><h1 class="h-big">Nhật ký</h1><p class="muted">Những lần ${esc(youi())} bốc bài cùng Bánh chúi nè.</p></div>
+  ${j.length?`<div class="jr">${j.map((e,i)=>{const sp=SPREADS.find(s=>s.id===e.spread),d=new Date(e.ts);
+    return `<button class="jr-item" data-j="${i}"><div class="row"><b>${sp?sp.name:"Trải bài"} · ${TOPICS[e.topic]?TOPICS[e.topic].label:""}</b><span class="muted" style="font-size:12.5px;white-space:nowrap">${pad(d.getDate())}/${pad(d.getMonth()+1)} · ${pad(d.getHours())}:${pad(d.getMinutes())}</span></div>
+    ${e.question?`<span class="muted" style="font-size:13px">“${esc(clip(e.question,80))}”</span>`:""}
+    <div class="cards">${e.cards.map(c=>{const k=byId(c.id);return k?`<span class="kw">${k.emoji} ${esc(k.vi)}${c.rev?" (ngược)":""}</span>`:""}).join("")}</div>
+    ${e.chat&&e.chat.filter(m=>m.role==="me").length?`<span class="muted" style="font-size:12.5px">💬 ${e.chat.filter(m=>m.role==="me").length} câu hỏi thêm</span>`:""}</button>`}).join("")}</div>`
+   :`<div class="card empty">${mascot("m","width:80px;height:86px")}<b>Nhật ký còn trống trơn nè</b><p class="muted">Bốc lá bài hôm nay là Bánh chúi tự ghi lại cho ${esc(youi())} luôn.</p><button class="btn-main" data-goto-home>Bốc lá đầu tiên ✨</button></div>`}
+  ${FOOT}`;
+}
+function openJournalEntry(en){
+  Flow.showSaved({spread:en.spread,topic:en.topic,ts:en.ts,key:en.key,names:en.names||[],question:en.question||"",pos:en.pos,chat:en.chat||[],qa:en.qa||"",
+    cards:en.cards.map(c=>({card:byId(c.id),rev:c.rev,pos:c.pos})).filter(c=>c.card)});
+}
+$("#p-journal").addEventListener("click",e=>{
+  if(e.target.closest("[data-goto-home]")){go("home");return}
+  const it=e.target.closest("[data-j]");if(it)openJournalEntry(getJournal()[+it.dataset.j]);
+});
+
+/* =========================================================
+   HỒ SƠ (tên – giới tính – độ tuổi)
+   ========================================================= */
+const GENDERS=["Nữ","Nam","Không muốn nói"];
+const AGES=["Dưới 18","18-24","25-34","35-44","45+"];
+function profileFormHTML(p){p=p||{};
+  return `<form class="ob-form" id="pf" novalidate>
+   <div class="field"><label for="pf-name">Bánh chúi gọi bạn iu là gì nè?</label><input id="pf-name" maxlength="24" autocomplete="nickname" placeholder="Ví dụ: Canda" value="${esc(p.name||"")}"></div>
+   <fieldset><legend>Bạn iu là</legend><div class="opt-row" data-group="gender">${GENDERS.map(g=>`<button type="button" class="chip" data-v="${g}" aria-pressed="${p.gender===g}">${g}</button>`).join("")}</div></fieldset>
+   <fieldset><legend>Độ tuổi của bạn iu</legend><div class="opt-row" data-group="age">${AGES.map(a=>`<button type="button" class="chip" data-v="${a}" aria-pressed="${p.age===a}">${a}</button>`).join("")}</div></fieldset>
+   <label class="check"><input type="checkbox" id="pf-ok" ${p.consent?"checked":""}> Mình đồng ý cho Bánh chúi lưu tên, giới tính và độ tuổi để làm quen và giải bài hợp với mình hơn (không dùng cho mục đích khác đâu nha)</label>
+   <button class="btn-main btn-block" id="pf-go" ${p.consent?"":"disabled"}>Đồng ý & đi tiếp 💛</button></form>`;
+}
+function bindProfileForm(root,onDone){
+  const f=$("#pf",root);
+  const ok=$("#pf-ok",f);ok.addEventListener("change",()=>{$("#pf-go",f).disabled=!ok.checked});
+  f.addEventListener("click",e=>{const c=e.target.closest(".opt-row .chip");if(!c)return;$$(".chip",c.parentNode).forEach(x=>x.setAttribute("aria-pressed",x===c));});
+  f.addEventListener("submit",e=>{e.preventDefault();
+    const name=$("#pf-name",f).value.trim().replace(/\s+/g," "), g=$('[data-group="gender"] [aria-pressed="true"]',f), a=$('[data-group="age"] [aria-pressed="true"]',f);
+    if(!name){$("#pf-name",f).focus();toast("Cho Bánh chúi biết tên bạn iu nha");return}
+    if(!g){toast("Bạn iu chọn giới tính giúp Bánh chúi nha");return}
+    if(!a){toast("Bạn iu chọn độ tuổi nữa nha");return}
+    const consent=$("#pf-ok",f).checked, prev=PROFILE||{};
+    if(!consent){toast("Bạn iu tick đồng ý để đi tiếp nha");return}
+    PROFILE={name,gender:g.dataset.v,age:a.dataset.v,consent,ts:Date.now()};
+    const changed=prev.name!==PROFILE.name||prev.gender!==PROFILE.gender||prev.age!==PROFILE.age;
+    if(consent&&changed)sendToForm(PROFILE);
+    store.set("bc_profile",PROFILE);onDone();
+  });
+}
+function profileSheet(){
+  const bg=sheet(`<h3 class="h-sec">Thông tin của bạn iu</h3>${profileFormHTML(PROFILE)}<button class="btn-ghost btn-block" data-close>Để sau</button>`);
+  $(".ob-form",bg).style.maxWidth="none";
+  bindProfileForm(bg,()=>{bg.remove();toast(`Bánh chúi nhớ rồi nè, ${youi()} 💛`);go(TAB)});
+  const sec=document.createElement("div");sec.className="mean-box";sec.style.gap="10px";
+  const j=getJournal().length;
+  sec.innerHTML=`<b>Sao lưu dữ liệu 💾</b><p class="muted" style="font-size:13px">Dữ liệu (tên, nhật ký ${j} lần bốc, chuỗi ngày) đang được lưu tự động trên máy này. Muốn chuyển sang máy khác, hoặc phòng khi lỡ xóa lịch sử trình duyệt, bạn iu tải file sao lưu về giữ nha.</p>
+   <button class="btn-ghost btn-block" id="bk-file">Tải file sao lưu</button>
+   <button class="btn-ghost btn-block" id="bk-copy">Sao chép mã sao lưu</button>
+   <label class="btn-ghost btn-block" for="bk-in" style="cursor:pointer">Khôi phục từ file</label><input type="file" id="bk-in" accept=".json,application/json,text/plain" hidden>
+   <div class="field"><label for="bk-code" style="font-size:13px">Hoặc dán mã sao lưu vào đây</label><textarea id="bk-code" placeholder="BCT1:…" style="min-height:64px"></textarea></div>
+   <button class="btn-ghost btn-block" id="bk-restore">Khôi phục từ mã</button>`;
+  $(".sheet",bg).insertBefore(sec,$("[data-close]",bg));
+  $("#bk-file",bg).onclick=backupFile;
+  $("#bk-copy",bg).onclick=async()=>{const code=backupCode();try{await navigator.clipboard.writeText(code);toast("Đã sao chép mã, bạn iu dán vào ghi chú để giữ nha 📋")}
+    catch(e){const t=$("#bk-code",bg);t.value=code;t.focus();t.select();toast("Bạn iu bấm Sao chép thủ công giúp Bánh chúi nha")}};
+  $("#bk-in",bg).onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{if(restoreFrom(rd.result)){bg.remove();go(TAB)}};rd.readAsText(f)};
+  $("#bk-restore",bg).onclick=()=>{if(restoreFrom($("#bk-code",bg).value)){bg.remove();go(TAB)}};
+}
+
+/* =========================================================
+   SAO LƯU & KHÔI PHỤC
+   Dữ liệu tự lưu trong trình duyệt (localStorage) mỗi lần dùng.
+   File/mã sao lưu để chuyển máy hoặc phòng khi bị xóa.
+   ========================================================= */
+const BK_KEYS=["bc_profile","bc_daily","bc_journal","bc_birth","bc_topic","bc_seen"];
+function backupData(){const o={v:1,at:Date.now()};BK_KEYS.forEach(k=>{const v=store.get(k,null);if(v!=null)o[k]=v});return o}
+function backupCode(){const bytes=new TextEncoder().encode(JSON.stringify(backupData()));let bin="";bytes.forEach(b=>bin+=String.fromCharCode(b));return "BCT1:"+btoa(bin)}
+async function backupFile(){
+  const txt=JSON.stringify(backupData()),fname=`banh-chui-sao-luu-${dkey()}.json`;
+  if(DL){try{await DL.save({filename:fname,data:new Blob([txt],{type:"application/json"})});toast("Lưu file sao lưu xong rồi nè 💾")}catch(e){if(!e||e.code!=="declined")toast("Chưa lưu được file, bạn iu dùng mã sao lưu nha")}return}
+  const url=URL.createObjectURL(new Blob([txt],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download=fname;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
+  toast("Bánh chúi tải file sao lưu về máy rồi nè 💾");
+}
+function restoreFrom(raw){
+  let o;try{raw=String(raw||"").trim();
+    if(raw.startsWith("BCT1:")){const bin=atob(raw.slice(5).replace(/\s/g,""));o=JSON.parse(new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0))))}
+    else o=JSON.parse(raw);
+  }catch(e){toast("Mã sao lưu chưa đúng rồi, bạn iu kiểm tra lại nha");return false}
+  if(!o||o.v!==1){toast("File này không phải sao lưu của Bánh chúi nè");return false}
+  /* gộp, không ghi đè mất dữ liệu đang có */
+  const j=getJournal(),keys=new Set(j.map(e=>e.key));(o.bc_journal||[]).forEach(e=>{if(e&&e.key&&!keys.has(e.key))j.push(e)});
+  j.sort((a,b)=>b.ts-a.ts);store.set("bc_journal",j.slice(0,200));
+  const d=getDaily();Object.entries(o.bc_daily||{}).forEach(([k,v])=>{d[k]=Object.assign({},v,d[k]||{})});store.set("bc_daily",d);
+  if(o.bc_profile&&!PROFILE){PROFILE=o.bc_profile;store.set("bc_profile",PROFILE)}
+  ["bc_birth","bc_topic"].forEach(k=>{if(o[k]!=null&&store.get(k,null)==null)store.set(k,o[k])});
+  store.set("bc_seen",1);
+  toast(`Khôi phục xong rồi nè, ${youi()} 💛`);return true;
+}
+/* Xin trình duyệt giữ dữ liệu lâu dài (Chrome/Android hỗ trợ tốt) */
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist().catch(()=>{})}catch(e){}
+
+/* =========================================================
+   TRẢI NGHIỆM CHỌN LÁ
+   ========================================================= */
+const Flow={
+  el:$("#flow"),st:null,timer:null,
+  open(spreadId,opts={}){
+    const sp=SPREADS.find(s=>s.id===spreadId);
+    if(spreadId==="daily"&&todayDraw(opts.topic)){go("home");return}
+    this.st={sp,topic:opts.topic||sp.topic||"self",names:[],question:"",deck:shuffle(CARDS),sel:[],cards:null,chat:[],ts:Date.now(),
+      pos:sp.id==="year"?yearPos():sp.pos.slice()};
+    this.el.hidden=false;document.body.style.overflow="hidden";
+    (sp.pickTopic||sp.askName)?this.setup():this.focus();
+  },
+  close(){clearInterval(this.timer);if(Chat.ctl)Chat.ctl.abort();this.el.hidden=true;this.el.innerHTML="";document.body.style.overflow="";$("#fly").innerHTML="";go(TAB)},
+  top(title,back){return `<div class="ov-top">${back?`<button class="icon-btn" data-back="${back}" aria-label="Quay lại">‹</button>`:'<span style="width:44px"></span>'}<b style="text-align:center;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(title)}</b><button class="icon-btn" data-x aria-label="Đóng">✕</button></div>`},
+  /* Bước 1: chọn chủ đề + tên + câu hỏi */
+  setup(){
+    const {sp,topic,names,question}=this.st;
+    const nameFields=sp.askName===2?`<div class="setup-sec"><div class="field"><label for="nm-a">Lựa chọn A</label><input id="nm-a" maxlength="30" value="${esc(names[0]||"")}" placeholder="Ví dụ: ở lại công ty cũ"></div><div class="field"><label for="nm-b">Lựa chọn B</label><input id="nm-b" maxlength="30" value="${esc(names[1]||"")}" placeholder="Ví dụ: chuyển việc mới"></div></div>`
+      :sp.askName?`<div class="setup-sec"><div class="field"><label for="nm-a">Tên hoặc nickname của người ấy</label><input id="nm-a" maxlength="30" value="${esc(names[0]||"")}" placeholder="Để Bánh chúi gọi đúng tên nha"></div></div>`:"";
+    const head=sp.pickTopic?[`${Youi()} muốn hỏi về chuyện gì nè?`,"Chọn chủ đề để Bánh chúi giải đúng chuyện bạn iu đang nghĩ nha."]
+      :sp.askName===2?["Hai lựa chọn của bạn iu là gì nè?","Ghi ngắn gọn thôi, Bánh chúi sẽ gọi đúng tên từng lựa chọn khi giải."]
+      :["Người ấy là ai nè?","Cho Bánh chúi biết tên hoặc nickname để lời giải gọi đúng người nha."];
+    this.el.innerHTML=`${this.top(sp.name)}<div class="ov-body">
+      <div style="display:flex;flex-direction:column;gap:6px"><h2 class="h-big">${esc(head[0])}</h2>
+      <p class="muted">${head[1]}</p></div>
+      ${sp.pickTopic?`<div class="topic-grid" role="group" aria-label="Chủ đề">${Object.entries(TOPICS).map(([k,t])=>`<button class="topic-tile" data-tp="${k}" aria-pressed="${k===topic}"><span class="e">${t.emo}</span>${t.label}</button>`).join("")}</div>`:""}
+      ${nameFields}
+      ${sp.pickTopic?`<div class="setup-sec"><div class="field"><label for="q-in">${sp.askQ?"Câu hỏi Có/Không của bạn iu":"Câu hỏi của bạn iu (không bắt buộc)"}</label>
+      <textarea id="q-in" maxlength="200" placeholder="${sp.askQ?"Ví dụ: Mình có nên nhắn tin cho bạn ấy trước không?":"Viết ra câu hỏi giúp bạn iu tập trung hơn đó"}">${esc(question)}</textarea></div></div>`:""}
+      <button class="btn-main btn-block" id="to-focus" style="max-width:340px">Tiếp nè ✨</button></div>`;
+    this.el.scrollTop=0;
+  },
+  fromSetup(){
+    const sp=this.st.sp,a=$("#nm-a"),b=$("#nm-b"),q=$("#q-in");
+    if(a&&!a.value.trim()){a.focus();toast(sp.askName===2?"Bạn iu ghi lựa chọn A giúp Bánh chúi nha":"Bạn iu cho Bánh chúi biết tên người ấy nha");return}
+    if(b&&!b.value.trim()){b.focus();toast("Bạn iu ghi lựa chọn B nữa nha");return}
+    if(sp.askQ&&q&&!q.value.trim()){q.focus();toast("Bạn iu viết câu hỏi Có/Không ra giúp Bánh chúi nha");return}
+    this.st.names=[a&&a.value.trim(),b&&b.value.trim()].filter(Boolean);
+    this.st.question=q?q.value.trim():"";
+    this.focus();
+  },
+  /* Bước 2: tập trung */
+  focus(){
+    const {sp,topic}=this.st, sub=sp.id==="daily"?`Lá bài hôm nay · ${TOPICS[topic].label}`:sp.pickTopic?`${sp.name} · ${TOPICS[topic].label}`:sp.name;
+    this.el.innerHTML=`${this.top(sub,(sp.pickTopic||sp.askName)?"setup":"")}<div class="ov-body">
+      <h2 class="h-big">Tập trung nè ✨</h2>
+      <div class="breath">${mascot("m")}</div>
+      <p class="breath-txt" id="breath-txt" aria-live="polite">Hít vào thật sâu…</p>
+      ${this.st.question?`<p style="font-weight:600;max-width:320px">“${esc(this.st.question)}”</p>`:""}
+      <p class="muted" style="max-width:320px">${esc(Youi())} hít một hơi thật sâu, thở ra thật chậm, rồi nghĩ về câu hỏi trong lòng nha. Khi thấy sẵn sàng thì bấm xào bài.</p>
+      <button class="btn-main btn-block" id="do-shuffle" style="max-width:340px">Xào bài 🍌</button></div>`;
+    this.el.scrollTop=0;
+    let inhale=true;clearInterval(this.timer);
+    this.timer=setInterval(()=>{inhale=!inhale;const t=$("#breath-txt");if(t)t.textContent=inhale?"Hít vào thật sâu…":"Thở ra thật chậm…"},4000);
+  },
+  shuffleAnim(){
+    clearInterval(this.timer);vibrate(20);
+    let backs="";for(let i=0;i<10;i++){const r=()=>Math.round(Math.random()*120-60);
+      backs+=`<span class="cback sback" style="--x1:${r()}px;--y1:${r()/2}px;--r1:${r()/3}deg;--x2:${r()}px;--y2:${r()/2}px;--r2:${r()/3}deg;animation-delay:${i*25}ms"></span>`}
+    this.el.innerHTML=`${this.top("Đang xào bài")}<div class="ov-body"><h2 class="h-big">Bánh chúi đang xào bài…</h2><div class="shuffle-stage">${backs}</div><p class="muted">Nghĩ thật kỹ về câu hỏi của bạn iu nha 🌙</p></div>`;
+    this.st.deck=shuffle(this.st.deck);
+    setTimeout(()=>this.pick(),RM?200:1550);
+  },
+  pick(){
+    const {sp}=this.st;this.st.sel=[];
+    let slots="";for(let i=0;i<78;i++)slots+=`<div class="slot" data-i="${i}"><button class="pcard cback" aria-label="Lá úp số ${i+1}" style="animation-delay:${RM?0:Math.min(i,40)*12}ms"></button></div>`;
+    this.el.innerHTML=`${this.top(sp.id==="daily"?"Lá bài hôm nay":sp.name)}<div class="ov-body">
+      <div class="pick-head"><h2 class="h-sec">${esc(Youi())} ơi, Bánh chúi xào bài xong rồi nè 🍌✨</h2>
+      <p class="muted">${sp.n===1?"Chọn 1 lá mà bạn iu thấy có duyên nhất nha.":`Chọn ${sp.n} lá theo cảm giác của bạn iu nha.`} Chạm lần nữa để bỏ chọn.</p></div>
+      <div class="scroller" id="sc"><span class="spacer"></span>${slots}<span class="spacer"></span></div>
+      <p class="swipe-hint">‹ Vuốt ngang để xem hết 78 lá ›</p>
+      <span class="counter" id="counter" aria-live="polite">Đã chọn 0/${sp.n} lá</span>
+      <button class="btn-main btn-block" id="do-reveal" hidden style="max-width:340px">Lật bài thôi!</button></div>`;
+    const sc=$("#sc"),sl=$$(".slot",sc);
+    const offs=sl.map(s=>s.offsetLeft+38);
+    let raf=0;const arc=()=>{raf=0;const half=sc.clientWidth/2,c=sc.scrollLeft+half;
+      sl.forEach((s,i)=>{let n=(offs[i]-c)/half;n=Math.max(-1.5,Math.min(1.5,n));s.style.transform=`translateY(${(n*n*30).toFixed(1)}px) rotate(${(n*13).toFixed(2)}deg)`})};
+    sc.scrollLeft=(sc.scrollWidth-sc.clientWidth)/2+(Math.random()*400-200);arc();
+    sc.addEventListener("scroll",()=>{if(!raf)raf=requestAnimationFrame(arc)},{passive:true});
+    sc.addEventListener("click",e=>{const s=e.target.closest(".slot");if(s)this.toggle(s)});
+  },
+  toggle(s){
+    const i=+s.dataset.i,sel=this.st.sel,n=this.st.sp.n,at=sel.indexOf(i);
+    if(at>=0){sel.splice(at,1);s.classList.remove("sel")}
+    else{
+      if(sel.length>=n){
+        if(n===1){const old=$(`.slot[data-i="${sel[0]}"]`);old&&old.classList.remove("sel");sel.length=0}
+        else{toast("Đủ lá rồi nè, bỏ chọn một lá trước nha bạn iu");return}
+      }
+      sel.push(i);s.classList.add("sel");vibrate(15);
+    }
+    $("#counter").textContent=`Đã chọn ${sel.length}/${n} lá`;
+    $("#do-reveal").hidden=sel.length!==n;
+  },
+  reveal(){
+    const st=this.st;
+    const src=st.sel.map(i=>$(`.slot[data-i="${i}"] .pcard`).getBoundingClientRect());
+    st.cards=st.sel.map((_,k)=>({card:st.deck[k],rev:Math.random()<0.3,pos:st.pos[k]}));
+    st.key=st.sp.id==="daily"?"daily-"+dkey()+"-"+st.topic:st.sp.id+"-"+st.ts;
+    if(st.sp.id==="daily"){setDaily(st.topic,st.cards[0].card.id,st.cards[0].rev);saveJournal(this.reading())}
+    const n=st.cards.length,w=n===1?168:n===4?110:n<=3?104:n<=6?96:70;
+    const posL=k=>st.sp.id==="daily"?`${TOPICS[st.topic].emo} ${TOPICS[st.topic].label}`:posLabel(st.sp,st.pos[k],st.names);
+    this.el.innerHTML=`${this.top(st.sp.id==="daily"?"Lá bài hôm nay":st.sp.name)}<div class="ov-body">
+      <h2 class="h-sec">Chạm vào lá để lật nha ${esc(youi())} ✨</h2>
+      <div class="rv-grid">${st.cards.map((c,k)=>`<div class="rv-slot" data-k="${k}" style="max-width:${Math.max(w,96)}px"><span class="pos" style="text-align:center">${esc(posL(k))}</span>
+        <button class="flip pending" style="--w:${w}px" aria-label="Lật lá ${esc(posL(k))}"><span class="flip-in"><span class="side back cback"></span><span class="side front">${faceHTML(c.card,w,c.rev)}</span></span></button>
+        <span class="pill rev rev-tag"${c.rev?"":' style="display:none"'}>Ngược</span></div>`).join("")}</div>
+      ${n>2?'<button class="btn-ghost" id="flip-all">Lật hết một lượt</button>':""}
+      <button class="btn-main btn-block" id="to-result" hidden style="max-width:340px">Xem lời giải của Bánh chúi 💛</button></div>`;
+    this.el.scrollTop=0;
+    const targets=$$(".flip",this.el);
+    if(RM){targets.forEach(t=>t.classList.remove("pending"));return}
+    const layer=$("#fly");
+    targets.forEach((t,i)=>{const s=src[i],r=t.getBoundingClientRect();
+      const el=document.createElement("div");el.className="cback fly-card";
+      Object.assign(el.style,{left:s.left+"px",top:s.top+"px",width:s.width+"px",height:s.height+"px"});layer.appendChild(el);
+      const dx=r.left-s.left,dy=r.top-s.top,sx=r.width/s.width,sy=r.height/s.height;
+      const done=()=>{t.classList.remove("pending");el.remove()};
+      const an=el.animate([{transform:"translate(0,0) scale(1,1) rotate(0)"},{offset:.55,transform:`translate(${dx*.55}px,${dy*.55-60}px) scale(${(1+sx)/2},${(1+sy)/2}) rotate(-8deg)`},{transform:`translate(${dx}px,${dy}px) scale(${sx},${sy}) rotate(0)`}],
+        {duration:780,delay:i*110,easing:"cubic-bezier(.4,.1,.2,1)",fill:"forwards"});
+      an.finished.then(done,done);
+    });
+  },
+  flip(btn){
+    if(btn.classList.contains("on")||btn.classList.contains("pending"))return;
+    btn.classList.add("on");btn.closest(".rv-slot").classList.add("flipped");vibrate(12);
+    if($$(".flip:not(.on)",this.el).length===0){const fa=$("#flip-all");fa&&(fa.hidden=true);
+      setTimeout(()=>{const b=$("#to-result");if(b){b.hidden=false;b.scrollIntoView({behavior:RM?"auto":"smooth",block:"center"})}},RM?0:700)}
+  },
+  reading(){const st=this.st;return {spread:st.sp.id,topic:st.topic,names:st.names,question:st.question,pos:st.pos,ts:st.ts,key:st.key,cards:st.cards,chat:st.chat,qa:st.qa||""}},
+  showSaved(r){
+    const sp=SPREADS.find(s=>s.id===r.spread);
+    this.st={sp,topic:r.topic||"self",names:r.names||[],question:r.question||"",pos:r.pos||sp.pos,ts:r.ts,key:r.key,cards:r.cards,chat:r.chat||[],qa:r.qa||"",
+      deck:shuffle(CARDS.filter(c=>!r.cards.some(x=>x.card.id===c.id)))};
+    this.el.hidden=false;document.body.style.overflow="hidden";this.result();
+  },
+  async result(){
+    const r=this.reading(),sp=this.st.sp,names=r.names||[];
+    this.el.innerHTML=`${this.top("Lời giải")}<div class="ov-body left"><p class="muted" style="text-align:center">Bánh chúi đang đọc bài cho bạn iu…</p></div>`;
+    const it=await window.BanhChuiInterpreter.interpret(r);this.st.interp=it;
+    const yn=sp.id==="yesno"?yesNo(r.cards[0].card,r.cards[0].rev):null;
+    const saved=inJournal(r.key);
+    this.el.innerHTML=`${this.top("Lời giải")}<div class="ov-body left">
+     <div style="text-align:center;display:flex;flex-direction:column;gap:4px"><span class="eyebrow">${esc(sp.id==="daily"?"Lá bài hôm nay":sp.name)} · ${TOPICS[r.topic].label}</span>
+       ${yn?`<p class="answer">${yn.t}</p><p class="muted">${yn.s}</p>`:`<h2 class="h-big">Bài của ${esc(youi())} nè 🍌</h2>`}
+       ${r.question?`<p style="font-weight:600">“${esc(r.question)}”</p>`:""}</div>
+     ${r.cards.map(c=>{const hint=posHint(sp,c.pos,names);return `<article class="res-card"><div class="res-top">${faceHTML(c.card,96,c.rev)}<div class="txt">
+        <span class="eyebrow">${esc(sp.id==="daily"?"Lá hôm nay":posLabel(sp,c.pos,names))}</span><h3>${esc(c.card.vi)}</h3><span class="muted" style="font-size:13px">${esc(c.card.en)}</span>
+        <div class="kws">${c.rev?'<span class="pill rev">Ngược</span>':'<span class="pill">Xuôi</span>'}${kws(c.card,c.rev).map(k=>`<span class="kw">${k}</span>`).join("")}</div></div></div>
+        ${hint&&sp.id!=="daily"?`<p class="pos-hint">${esc(hint)}</p>`:""}
+        ${tone(c.card,c.rev)<0?`<p class="soft-note">${HARD_NOTE}</p>`:""}
+        <p>${esc(meaning(c.card,r.topic,c.rev))}</p></article>`}).join("")}
+     ${r.question&&(this.st.qa||SAMPLE)?`<section class="sum-card a" style="background:#fff;box-shadow:var(--shadow)"><h3>🔮 Trả lời câu hỏi của ${esc(youi())}</h3><p id="qa-text">${esc(this.st.qa||"Bánh chúi đang ngẫm câu hỏi của bạn iu nè…")}</p></section>`:""}
+     <section class="sum-card a"><h3>${mascot("m")}Tổng kết của Bánh chúi</h3><p>${esc(it.summary)}</p></section>
+     <section class="sum-card b"><h3>💌 Lời nhắn của Bánh chúi</h3><p>${esc(it.message)}</p></section>
+     <p class="disclaimer">${DISCLAIMER}</p>
+     <div class="actions">
+       <button class="btn-main btn-block" id="story">Lưu ảnh để đăng story 📸</button>
+       <button class="btn-ghost btn-block" id="save-j" ${saved?"disabled":""}>${saved?"Đã lưu vào nhật ký ✓":"Lưu vào nhật ký"}</button>
+       <button class="btn-ghost btn-block" id="other">Bốc trải khác</button></div>
+     <section class="chat" id="chat" aria-label="Chat thêm với Bánh chúi"></section>
+     ${FOOT}</div>`;
+    this.el.scrollTop=0;
+    Chat.mount();
+    if(r.question&&!this.st.qa&&SAMPLE)Chat.answerQuestion();
+  }
+};
+Flow.el.addEventListener("click",e=>{
+  if(e.target.closest("[data-x]")){Flow.close();return}
+  const bk=e.target.closest("[data-back]");if(bk){clearInterval(Flow.timer);Flow[bk.dataset.back]();return}
+  const tp=e.target.closest("[data-tp]");if(tp){Flow.st.topic=tp.dataset.tp;$$("[data-tp]",Flow.el).forEach(x=>x.setAttribute("aria-pressed",x===tp));return}
+  if(e.target.closest("#to-focus")){Flow.fromSetup();return}
+  if(e.target.closest("#do-shuffle")){Flow.shuffleAnim();return}
+  if(e.target.closest("#do-reveal")){Flow.reveal();return}
+  if(e.target.closest("#flip-all")){$$(".flip:not(.on)",Flow.el).forEach((f,i)=>setTimeout(()=>Flow.flip(f),RM?0:i*160));return}
+  const f=e.target.closest(".flip");if(f){Flow.flip(f);return}
+  if(e.target.closest("#to-result")){Flow.result();return}
+  if(e.target.closest("#story")){makeStory(Flow.reading(),Flow.st.interp);return}
+  if(e.target.closest("#save-j")){if(saveJournal(Flow.reading())){const b=$("#save-j");b.disabled=true;b.textContent="Đã lưu vào nhật ký ✓";toast("Bánh chúi cất vào nhật ký rồi nè 📔")}return}
+  if(e.target.closest("#other")){TAB="spreads";Flow.close();return}
+  Chat.click(e);
+});
+Flow.el.addEventListener("submit",e=>{if(e.target.id==="chat-form"){e.preventDefault();Chat.submit()}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){const s=$(".sheet-bg");if(s){s.remove();return}if(!Flow.el.hidden)Flow.close()}});
+
+/* =========================================================
+   CHAT THÊM VỚI BÁNH CHÚI
+   Có AI (khi mở trong Claude) thì trò chuyện tự do; không có thì
+   Bánh chúi trả lời dựa trên các lá đã bốc + cho rút thêm lá làm rõ.
+   ========================================================= */
+const MAX_EXTRA=3;
+const Chat={
+  busy:false,picking:false,ctl:null,
+  get st(){return Flow.st},
+  mount(){
+    if(!this.st.chat.length)this.st.chat.push({role:"bot",text:`${Youi()} còn thắc mắc gì không nè? Hỏi thêm Bánh chúi, hoặc rút thêm 1 lá để làm rõ nha 🍌`});
+    this.picking=false;this.render();
+  },
+  extraCount(){return this.st.chat.filter(m=>m.card).length},
+  render(){
+    const box=$("#chat");if(!box)return;
+    const left=MAX_EXTRA-this.extraCount();
+    box.innerHTML=`<h3>💬 Chat thêm với Bánh chúi</h3>
+     <div class="msgs" id="msgs" aria-live="polite">${this.st.chat.map(m=>this.msgHTML(m)).join("")}</div>
+     ${this.picking?`<div><p class="muted" style="text-align:center;font-size:13px">Chạm 1 lá bạn iu thấy có duyên nha</p><div class="mini-pick">${Array.from({length:7},(_,i)=>`<button class="cback" data-xpick="${i}" aria-label="Lá úp ${i+1}"></button>`).join("")}</div></div>`:""}
+     <div class="chips">
+       ${left>0?`<button class="chip" data-q="draw">🃏 Rút thêm 1 lá (${left})</button>`:""}
+       <button class="chip" data-q="Giờ mình nên làm gì tiếp?">Giờ mình nên làm gì?</button>
+       <button class="chip" data-q="Giải kỹ hơn giúp mình nha">Giải kỹ hơn giúp mình</button></div>
+     <form class="chat-form" id="chat-form"><input id="chat-in" maxlength="300" placeholder="Hỏi thêm Bánh chúi nè…" aria-label="Câu hỏi cho Bánh chúi" autocomplete="off">
+     <button class="send" aria-label="Gửi" ${this.busy?"disabled":""}>➤</button></form>`;
+  },
+  msgHTML(m){
+    if(m.role==="me")return `<div class="msg me">${esc(m.text)}</div>`;
+    const c=m.card&&byId(m.card.id);
+    return `<div class="msg bot">${c?`<div class="mini">${faceHTML(c,54,m.card.rev)}<div><span class="eyebrow">Lá làm rõ</span><b>${esc(c.vi)}${m.card.rev?" (ngược)":""}</b></div></div>`:""}${esc(m.text)}</div>`;
+  },
+  push(m){this.st.chat.push(m);updateJournal(Flow.reading());this.render();const ms=$("#msgs");ms&&ms.lastElementChild&&ms.lastElementChild.scrollIntoView({behavior:RM?"auto":"smooth",block:"nearest"})},
+  click(e){
+    const q=e.target.closest("[data-q]");
+    if(q){if(this.busy)return;
+      if(q.dataset.q==="draw"){if(this.extraCount()>=MAX_EXTRA){toast("Rút nhiều quá dễ rối lắm, bạn iu đọc kỹ các lá hiện có nha");return}this.picking=true;this.render();return}
+      this.ask(q.dataset.q);return}
+    const x=e.target.closest("[data-xpick]");if(x){this.drawExtra();return}
+  },
+  submit(){const i=$("#chat-in");const v=i.value.trim();if(!v||this.busy)return;i.value="";this.ask(v)},
+  drawExtra(){
+    const st=this.st, used=new Set([...st.cards.map(c=>c.card.id),...st.chat.filter(m=>m.card).map(m=>m.card.id)]);
+    const pool=(st.deck||CARDS).filter(c=>!used.has(c.id)), c=pool.length?pool[Math.floor(Math.random()*pool.length)]:CARDS[Math.floor(Math.random()*CARDS.length)];
+    const rev=Math.random()<0.3;vibrate(15);this.picking=false;
+    const k=kws(c,rev);
+    this.push({role:"bot",card:{id:c.id,rev},text:`Lá này mang năng lượng ${k[0].toLowerCase()}, ${k[1].toLowerCase()}.${tone(c,rev)<0?" Hơi khó chịu xíu, nhưng biết trước là để chuẩn bị nha.":""} ${meaning(c,st.topic,rev)}`});
+  },
+  localAnswer(q){
+    const st=this.st, sp=st.sp, names=st.names||[], all=[...st.cards,...st.chat.filter(m=>m.card).map(m=>({card:byId(m.card.id),rev:m.card.rev,pos:"Lá làm rõ"}))];
+    const nq=norm(q);
+    if(/lam gi|nen|loi khuyen|tiep theo|cach nao/.test(nq)){
+      const adv=st.cards.find(c=>ADVICE_POS.includes(c.pos))||st.cards[st.cards.length-1];
+      return {text:`Theo lá ${adv.card.vi}${sp.n>1?` ở vị trí ${qt(posLabel(sp,adv.pos,names))}`:""}, Bánh chúi nghĩ ${youi()} nên: ${meaning(adv.card,st.topic,adv.rev)}\n\nBắt đầu từ một việc nhỏ nhất làm được ngay hôm nay nha 💛`};
+    }
+    if(/ky hon|chi tiet|ro hon|giai thich|tong ket/.test(nq)){
+      const lines=all.map(c=>`• ${sp.n>1||c.pos==="Lá làm rõ"?(c.pos==="Lá làm rõ"?"Lá làm rõ":posLabel(sp,c.pos,names))+": ":""}${c.card.vi}${c.rev?" (ngược)":""} – ${kws(c.card,c.rev).join(", ").toLowerCase()}`);
+      return {text:`Ghép các lá lại nè:\n${lines.join("\n")}\n\n${st.interp?st.interp.summary:""}`};
+    }
+    return {text:`Câu này Bánh chúi muốn hỏi thêm lá bài cho chắc nè. ${Youi()} rút thêm 1 lá làm rõ nha 🃏`,draw:this.extraCount()<MAX_EXTRA};
+  },
+  rules(){
+    const st=this.st, sp=st.sp, names=st.names||[];
+    const cards=st.cards.map(c=>`- ${sp.id==="daily"?"Lá hôm nay":posLabel(sp,c.pos,names)}: ${c.card.vi} (${c.card.en}), ${c.rev?"ngược":"xuôi"}; từ khóa: ${kws(c.card,c.rev).join(", ")}; ý nghĩa gốc: ${meaning(c.card,st.topic,c.rev)}`).join("\n");
+    const extra=st.chat.filter(m=>m.card).map(m=>{const c=byId(m.card.id);return `- Lá làm rõ: ${c.vi}, ${m.card.rev?"ngược":"xuôi"}; từ khóa: ${kws(c,m.card.rev).join(", ")}`}).join("\n");
+    const p=PROFILE||{};
+    return `Bạn là "Bánh chúi", một trái chuối nhỏ dễ thương xem tarot trên web Bánh chúi Tarot.
+Giọng văn: ${nick()?`gọi người dùng bằng tên "${nick()}" (không thêm "bạn iu" trước tên)`:'gọi người dùng là "bạn iu"'}, tự xưng "Bánh chúi". Dễ thương, ấm áp, hơi nhõng nhẽo, emoji vừa phải (🍌✨💛🌙). Gặp lá xấu thì nói thật nhưng nhẹ nhàng và luôn kèm hướng giải quyết.
+Quy tắc: trả lời bằng tiếng Việt, 3–6 câu, văn xuôi thuần, không dùng markdown, không gạch đầu dòng dài. Chỉ dựa vào các lá đã rút bên dưới; nếu câu hỏi cần thêm thông tin thì gợi ý người dùng bấm "Rút thêm 1 lá". Không khẳng định chắc chắn về sức khỏe, pháp lý, tiền bạc hay chuyện sống chết; với những chuyện đó nhắc họ hỏi người có chuyên môn. Nếu người dùng có dấu hiệu buồn nặng nề hoặc nghĩ tới việc làm hại bản thân, hãy dịu dàng khuyên họ nói chuyện với người thân tin cậy hoặc chuyên gia ngay. Không bịa thêm lá bài.
+Thông tin người dùng: ${p.gender?`giới tính ${p.gender}, `:""}${p.age?`độ tuổi ${p.age}`:""}
+Trải bài: ${sp.name}. Chủ đề: ${TOPICS[st.topic].label}.${names.length?` Tên/lựa chọn liên quan: ${names.join(" / ")}.`:""}${st.question?` Câu hỏi ban đầu: "${st.question}".`:""}
+Các lá:
+${cards}${extra?"\n"+extra:""}
+Tổng kết đã đưa: ${st.interp?st.interp.summary:""}`;
+  },
+  async answerQuestion(){
+    const st=Flow.st,el=()=>$("#qa-text");
+    const prompt=this.rules()+`\n\nNhiệm vụ: trả lời THẲNG vào câu hỏi "${st.question}" dựa trên các lá trên. Câu đầu tiên phải trả lời trực tiếp (ví dụ có/chưa/nên/không nên, hoặc điều cốt lõi), sau đó giải thích bằng 2–4 câu, nhắc tên lá và vị trí liên quan, cuối cùng là một việc cụ thể nên làm.`;
+    try{const {text}=await SAMPLE(prompt,{modelTier:"quick",onText:({text})=>{const e=el();if(e)e.textContent=nameText(text)}});
+      st.qa=text;updateJournal(Flow.reading());const e=el();if(e)e.textContent=nameText(text);
+    }catch(e){const x=el();if(!x)return;
+      if(e&&e.code==="not_granted"){SAMPLE=null;x.closest("section").remove()}
+      else x.textContent=(e&&e.text)||"Bánh chúi chưa nghĩ ra kịp, bạn iu hỏi lại ở ô chat bên dưới nha 🍌";}
+  },
+  async ask(q){
+    this.push({role:"me",text:q});
+    if(!SAMPLE){const a=this.localAnswer(q);this.push({role:"bot",text:a.text});if(a.draw){this.picking=true;this.render()}return}
+    this.busy=true;
+    const turns=[{role:"user",content:this.rules()},{role:"assistant",content:"Dạ Bánh chúi hiểu rồi nè 🍌"}];
+    this.st.chat.forEach(m=>{const role=m.role==="me"?"user":"assistant",content=m.card?`[Rút thêm lá ${byId(m.card.id).vi}${m.card.rev?" ngược":""}] ${m.text}`:m.text;
+      const last=turns[turns.length-1];if(last.role===role)last.content+="\n"+content;else turns.push({role,content})});
+    const bot={role:"bot",text:"Bánh chúi đang nghĩ nè…"};this.st.chat.push(bot);this.render();
+    const bubble=()=>{const ms=$("#msgs");return ms&&ms.lastElementChild};
+    this.ctl=new AbortController();
+    try{
+      const {text}=await SAMPLE(turns,{cache:false,modelTier:"quick",signal:this.ctl.signal,onText:({text})=>{bot.text=text;const b=bubble();if(b)b.textContent=text}});
+      bot.text=text;
+    }catch(e){
+      if(e&&e.code==="not_granted"){SAMPLE=null;bot.text=this.localAnswer(q).text}
+      else if(e&&e.code==="rate_limited")bot.text="Bánh chúi hơi mệt xíu rồi, bạn iu đợi một lát rồi hỏi lại nha 🍌";
+      else if(e&&e.code==="cancelled")bot.text=e.text||"…";
+      else bot.text=(e&&e.text)||this.localAnswer(q).text;
+    }
+    this.busy=false;updateJournal(Flow.reading());this.render();
+  }
+};
+
+/* =========================================================
+   LƯU ẢNH STORY 9:16 (html2canvas)
+   ========================================================= */
+let h2cP=null;
+function loadH2C(){return h2cP||(h2cP=new Promise((res,rej)=>{if(window.html2canvas)return res(window.html2canvas);
+  const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+  s.onload=()=>res(window.html2canvas);s.onerror=()=>{h2cP=null;rej(new Error("load"))};document.head.appendChild(s)}))}
+async function makeStory(r,it){
+  const btn=$("#story");if(btn){btn.disabled=true;btn.textContent="Bánh chúi đang vẽ ảnh…"}
+  const reset=()=>{if(btn){btn.disabled=false;btn.textContent="Lưu ảnh để đăng story 📸"}};
+  let h2c;try{h2c=await loadH2C()}catch(e){toast("Chưa tải được công cụ chụp ảnh, bạn iu thử lại sau nha");reset();return}
+  const sp=SPREADS.find(s=>s.id===r.spread),names=r.names||[],n=r.cards.length;
+  const w=n===1?140:n<=3?92:n===4?72:n<=6?78:n<=10?56:50;
+  const d=new Date(r.ts);
+  const node=document.createElement("div");node.className="story";
+  node.innerHTML=`<div class="st-top">${mascot("m")}Bánh chúi Tarot<span style="margin-left:auto;font-weight:600;font-size:12px">${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}</span></div>
+   <div style="display:flex;flex-direction:column;gap:4px"><span class="eyebrow" style="color:#6E6380">${TOPICS[r.topic].emo} ${TOPICS[r.topic].label}</span><h2>${esc(sp.id==="daily"?"Lá bài hôm nay của "+youi():sp.name)}</h2>
+   ${r.question?`<p style="font-size:13px;font-weight:600">“${esc(clip(r.question,90))}”</p>`:""}</div>
+   <div class="st-cards">${r.cards.map(c=>`<div class="st-c" style="width:${w+6}px">${faceHTML(c.card,w,c.rev)}${n>1?`<span>${esc(clip(posLabel(sp,c.pos,names),22))}${c.rev?" · ngược":""}</span>`:""}</div>`).join("")}</div>
+   ${n===1?`<div style="text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center"><b style="font-size:20px">${esc(r.cards[0].card.vi)}${r.cards[0].rev?" (ngược)":""}</b><div class="kws" style="justify-content:center">${kws(r.cards[0].card,r.cards[0].rev).map(k=>`<span class="kw" style="background:#fff">${k}</span>`).join("")}</div></div>`:""}
+   <div class="st-sum"><b>Bánh chúi nói nè 💛</b><p>${esc(clip(n===1&&r.spread!=="yesno"?meaning(r.cards[0].card,r.topic,r.cards[0].rev):(it?it.summary:""),n>3?150:n>1?200:240))}</p></div>
+   <p class="st-foot">${DISCLAIMER}</p>`;
+  document.body.appendChild(node);
+  try{
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    const cv=await h2c(node,{scale:3,backgroundColor:"#EADCF0",logging:false,useCORS:true});
+    const url=cv.toDataURL("image/png");
+    const blob=await new Promise(res=>cv.toBlob(res,"image/png"));
+    const fname=`banh-chui-tarot-${dkey(d)}.png`;
+    const bg=sheet(`<h3 class="h-sec" style="text-align:center">Ảnh story của ${esc(youi())} nè 📸</h3><img class="story-img" src="${url}" alt="Ảnh story trải bài">
+      <button class="btn-main btn-block" id="dl-story">Lưu ảnh về máy</button><p class="muted" style="text-align:center;font-size:13px">Nếu nút chưa chạy, bạn iu nhấn giữ vào ảnh để lưu nha.</p><button class="btn-ghost btn-block" data-close>Đóng</button>`);
+    $("#dl-story",bg).addEventListener("click",async()=>{
+      if(DL){try{await DL.save({filename:fname,data:blob});toast("Lưu xong rồi nè, đăng story thôi bạn iu ✨")}catch(e){if(!e||e.code!=="declined")toast("Chưa lưu được, bạn iu nhấn giữ ảnh để lưu nha")}return}
+      const a=document.createElement("a");a.href=url;a.download=fname;document.body.appendChild(a);a.click();a.remove();
+    });
+  }catch(e){toast("Bánh chúi vẽ ảnh chưa được, bạn iu thử lại nha")}
+  finally{node.remove();reset()}
+}
+
+/* =========================================================
+   MÀN CHÀO + HỒ SƠ LẦN ĐẦU
+   ========================================================= */
+function showWelcome(){
+  const w=document.createElement("div");w.className="welcome";w.setAttribute("role","dialog");w.setAttribute("aria-label","Chào mừng");
+  const hero=()=>{w.innerHTML=`<div class="welcome-in">
+    <span class="sparkle twinkle" style="width:22px;top:-6px;left:8px">${STAR}</span><span class="sparkle twinkle" style="width:14px;top:40px;right:0;animation-delay:.6s">${STAR}</span><span class="sparkle twinkle" style="width:18px;bottom:120px;left:-14px;animation-delay:1.1s">${STAR}</span>
+    ${mascot("m")}
+    <h1 class="h-big">Chào bạn iu!<br>Mình là Bánh chúi 🍌</h1>
+    <p style="max-width:320px">Mỗi ngày mình cùng bốc một lá bài, nghe lòng mình nói gì, rồi sống thật dịu dàng nha. Bạn iu tự tay chọn lá, Bánh chúi giải nghĩa cho nè ✨</p></div>
+    <div class="acts"><button class="btn-main" data-start>Bắt đầu nè</button></div>`};
+  const form=()=>{w.innerHTML=`<div class="welcome-in" style="width:100%;max-width:360px">${mascot("m","width:96px;height:104px")}
+    <h1 class="h-big" style="font-size:24px">Cho Bánh chúi làm quen xíu nha 💛</h1>
+    <p style="font-size:14px">Bánh chúi sẽ gọi đúng tên bạn iu và giải bài hợp với bạn iu hơn đó.</p>${profileFormHTML(PROFILE)}</div>`;
+    bindProfileForm(w,finish)};
+  const finish=()=>{store.set("bc_seen",1);w.remove();go("home");if(nick())toast(`Chào ${youi()} nè 🍌`)};
+  hero();document.body.appendChild(w);
+  w.addEventListener("click",e=>{
+    if(e.target.closest("[data-start]")){form();w.scrollTop=0}
+    else if(e.target.closest("[data-skip]")){finish()}
+  });
+}
+
+/* ---------- khởi động ---------- */
+renderNav();go("home");
+if(!PROFILE||!PROFILE.consent)showWelcome();
+</script>
+
+</body>
+</html>
